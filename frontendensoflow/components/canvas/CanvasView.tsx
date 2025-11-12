@@ -39,6 +39,12 @@ interface CanvasViewProps {
   readOnly?: boolean;
 }
 
+// Type for ReactFlow instance with project method (for older versions)
+type ReactFlowInstanceWithProject = {
+  project: (position: { x: number; y: number }) => { x: number; y: number };
+  [key: string]: unknown;
+};
+
 let nodeId = 0;
 const getNodeId = () => `node-${nodeId++}`;
 
@@ -46,9 +52,15 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstanceWithProject | null>(null);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [configModalOpen, setConfigModalOpen] = useState(false);
+
+  // Define handleConfigureNode first before using it
+  const handleConfigureNode = useCallback((nodeId: string) => {
+    setSelectedNode(nodeId);
+    setConfigModalOpen(true);
+  }, []);
 
   // Load initial canvas
   useEffect(() => {
@@ -74,7 +86,7 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
       setNodes(loadedNodes);
       setEdges(loadedEdges);
     }
-  }, [initialCanvas]);
+  }, [initialCanvas, handleConfigureNode, setNodes, setEdges]);
 
   const onConnect = useCallback(
     (params: Connection) => {
@@ -139,13 +151,8 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
         return updatedNodes;
       });
     },
-    [reactFlowInstance, setNodes]
+    [reactFlowInstance, setNodes, handleConfigureNode]
   );
-
-  const handleConfigureNode = (nodeId: string) => {
-    setSelectedNode(nodeId);
-    setConfigModalOpen(true);
-  };
 
   const handleSaveNodeConfig = (config: Record<string, unknown>) => {
     if (!selectedNode) return;
@@ -222,7 +229,7 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
-            onInit={setReactFlowInstance}
+            onInit={(instance) => setReactFlowInstance(instance as unknown as ReactFlowInstanceWithProject)}
             onDrop={onDrop}
             onDragOver={onDragOver}
             nodeTypes={nodeTypes}

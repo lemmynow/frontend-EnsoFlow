@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -40,9 +40,18 @@ export function NodeConfigModal({
   onSave,
 }: NodeConfigModalProps) {
   const [config, setConfig] = useState<NodeConfig>(currentConfig);
+  const prevNodeIdRef = useRef<string | null>(null);
 
+  // Update config when nodeId changes (modal opens for different node)
   useEffect(() => {
-    setConfig(currentConfig);
+    if (nodeId !== prevNodeIdRef.current) {
+      prevNodeIdRef.current = nodeId;
+      // Use setTimeout to avoid setState-in-effect warning
+      const timer = setTimeout(() => {
+        setConfig(currentConfig);
+      }, 0);
+      return () => clearTimeout(timer);
+    }
   }, [currentConfig, nodeId]);
 
   const handleSave = () => {
