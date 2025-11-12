@@ -27,7 +27,8 @@ const colorMap: Record<string, string> = {
 export const CustomNode = memo(({ data, id, type }: NodeProps) => {
   const Icon = iconMap[type || "repo"] || Database;
   const color = colorMap[type || "repo"] || "bg-gray-500";
-  const config = data.config as Record<string, unknown> || {};
+  const config = (data.config as Record<string, unknown>) || {};
+  const onConfigure = data.onConfigure as ((nodeId: string) => void) | undefined;
 
   return (
     <Card className="min-w-[200px] shadow-lg border-2 hover:shadow-xl transition-shadow">
@@ -52,12 +53,12 @@ export const CustomNode = memo(({ data, id, type }: NodeProps) => {
 
         {Object.keys(config).length > 0 && (
           <div className="text-xs space-y-1 mb-2">
-            {config.provider && (
+            {(config.provider as string) && (
               <div className="text-muted-foreground">
                 Provider: {config.provider as string}
               </div>
             )}
-            {config.template && (
+            {(config.template as string) && (
               <div className="text-muted-foreground">
                 Template: {config.template as string}
               </div>
@@ -69,7 +70,7 @@ export const CustomNode = memo(({ data, id, type }: NodeProps) => {
           size="sm"
           variant="ghost"
           className="w-full gap-2 text-xs h-7"
-          onClick={() => data.onConfigure?.(id)}
+          onClick={() => onConfigure?.(id)}
         >
           <Settings className="h-3 w-3" />
           Configure
