@@ -26,15 +26,17 @@ export function Navbar() {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="sticky top-0 z-50 w-full border-b-2 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm"
+      className="sticky top-0 z-50 w-full border-b-2 border-border/50 glass shadow-lg shadow-primary/5"
     >
       <div className="container flex h-20 items-center justify-between">
         <div className="flex items-center gap-8">
           <Link href="/dashboard" className="flex items-center gap-2.5 group">
-            <div className="bg-primary text-primary-foreground p-2 rounded-lg group-hover:scale-110 transition-transform">
-              <Layers className="h-5 w-5" />
+            <div className="gradient-primary p-2.5 rounded-xl group-hover:scale-110 transition-transform shadow-md shadow-primary/30">
+              <Layers className="h-5 w-5 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold group-hover:text-primary transition-colors">EnsoFlow</span>
+            <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent group-hover:from-secondary group-hover:to-accent transition-all">
+              EnsoFlow
+            </span>
           </Link>
 
           <div className="hidden md:flex items-center gap-2">
@@ -48,16 +50,16 @@ export function Navbar() {
                     variant={isActive ? "secondary" : "ghost"}
                     size="lg"
                     className={cn(
-                      "gap-2 relative font-medium",
-                      isActive && "bg-secondary shadow-sm"
+                      "gap-2 relative font-medium transition-all",
+                      isActive && "bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 shadow-sm text-primary"
                     )}
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon className={cn("h-5 w-5", isActive && "text-primary")} />
                     {item.label}
                     {isActive && (
                       <motion.div
                         layoutId="navbar-indicator"
-                        className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-t-full"
+                        className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-accent rounded-t-full"
                         transition={{ type: "spring", stiffness: 380, damping: 30 }}
                       />
                     )}
@@ -70,30 +72,30 @@ export function Navbar() {
 
         <div className="flex items-center gap-4">
           {user ? (
-            <div className="flex items-center gap-3 bg-secondary/50 px-4 py-2 rounded-full">
-              <span className="hidden sm:inline text-sm font-medium">
+            <div className="flex items-center gap-3 bg-gradient-to-r from-primary/10 to-secondary/10 px-4 py-2 rounded-full border border-primary/20 shadow-sm">
+              <span className="hidden sm:inline text-sm font-medium text-primary">
                 {user.username}
               </span>
               {user.avatarUrl && (
                 <img
                   src={user.avatarUrl}
                   alt={user.username}
-                  className="h-9 w-9 rounded-full border-2 border-primary/20 ring-2 ring-background"
+                  className="h-9 w-9 rounded-full border-2 border-primary/30 ring-2 ring-primary/10 shadow-md"
                 />
               )}
             </div>
           ) : isGuestMode ? (
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/70 text-secondary-foreground">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-info/20 to-accent/20 border border-info/30 text-info">
                 <Eye className="h-4 w-4" />
                 <span className="text-sm font-medium">Guest Mode</span>
               </div>
-              <Button asChild variant="outline" size="lg">
+              <Button asChild variant="outline" size="lg" className="shadow-sm">
                 <Link href="/login">Login</Link>
               </Button>
             </div>
           ) : (
-            <Button asChild size="lg">
+            <Button asChild size="lg" className="shadow-md shadow-primary/30">
               <Link href="/login">Login</Link>
             </Button>
           )}

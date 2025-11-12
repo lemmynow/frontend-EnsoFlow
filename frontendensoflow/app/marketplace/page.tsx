@@ -64,16 +64,18 @@ export default function MarketplacePage() {
 
   return (
     <AuthGuard allowGuest={true}>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <Navbar />
 
         <main className="container py-12">
           <div className="mb-12">
             <div className="flex items-center gap-3 mb-4">
-              <div className="bg-primary/10 p-2 rounded-lg">
-                <Sparkles className="h-8 w-8 text-primary" />
+              <div className="gradient-primary p-3 rounded-xl shadow-lg shadow-primary/30">
+                <Sparkles className="h-8 w-8 text-primary-foreground" />
               </div>
-              <h1 className="text-4xl font-bold">Marketplace</h1>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+                Marketplace
+              </h1>
             </div>
             <p className="text-muted-foreground text-lg">
               Choose from our curated templates to kickstart your project
@@ -105,16 +107,19 @@ export default function MarketplacePage() {
             >
               {filteredTemplates?.map((template) => (
                 <motion.div key={template.id} variants={item}>
-                  <Card className="hover:shadow-xl hover:scale-[1.02] hover:border-primary/50 transition-all duration-300 group h-full flex flex-col border-2">
-                    <CardHeader className="pb-4">
+                  <Card className="hover:shadow-2xl hover:shadow-primary/20 hover:scale-[1.02] hover:border-primary/60 transition-all duration-300 group h-full flex flex-col border-2 relative overflow-hidden">
+                    {/* Gradient overlay on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                    <CardHeader className="pb-4 relative z-10">
                       <div className="flex items-start justify-between mb-3">
-                        <div className="bg-primary/10 p-3 rounded-xl text-4xl">{template.icon}</div>
+                        <div className="gradient-accent p-3 rounded-xl text-4xl shadow-md">{template.icon}</div>
                         <div className="text-right">
                           {template.price === 0 ? (
-                            <span className="text-lg font-bold text-green-600">Free</span>
+                            <span className="text-lg font-bold text-success bg-success/10 px-3 py-1 rounded-full">Free</span>
                           ) : (
-                            <div>
-                              <span className="text-2xl font-bold">${template.price}</span>
+                            <div className="bg-gradient-to-br from-primary/10 to-secondary/10 px-3 py-1 rounded-lg">
+                              <span className="text-2xl font-bold text-primary">${template.price}</span>
                               <span className="text-sm text-muted-foreground">/use</span>
                             </div>
                           )}
@@ -127,19 +132,25 @@ export default function MarketplacePage() {
                         {template.description}
                       </CardDescription>
                     </CardHeader>
-                    <CardContent className="flex-1 flex flex-col justify-end space-y-4">
+                    <CardContent className="flex-1 flex flex-col justify-end space-y-4 relative z-10">
                       <div className="flex flex-wrap gap-2">
-                        {template.tags.map((tag) => (
+                        {template.tags.map((tag, index) => (
                           <span
                             key={tag}
-                            className="text-xs px-2.5 py-1 bg-secondary/70 rounded-full font-medium"
+                            className={`text-xs px-2.5 py-1 rounded-full font-medium border ${
+                              index % 3 === 0
+                                ? "bg-primary/10 border-primary/20 text-primary"
+                                : index % 3 === 1
+                                ? "bg-secondary/10 border-secondary/20 text-secondary"
+                                : "bg-accent/10 border-accent/20 text-accent"
+                            }`}
                           >
                             {tag}
                           </span>
                         ))}
                       </div>
                       <Button
-                        className="w-full gap-2"
+                        className="w-full gap-2 shadow-md shadow-primary/20"
                         size="lg"
                         onClick={() => {
                           if (isGuestMode || !user) {

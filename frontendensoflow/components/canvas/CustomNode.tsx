@@ -15,12 +15,12 @@ const iconMap: Record<string, React.ElementType> = {
 };
 
 const colorMap: Record<string, string> = {
-  repo: "bg-blue-500",
-  backend: "bg-purple-500",
-  database: "bg-green-500",
-  cache: "bg-red-500",
-  frontend: "bg-cyan-500",
-  worker: "bg-orange-500",
+  repo: "bg-primary",
+  backend: "bg-secondary",
+  database: "bg-success",
+  cache: "bg-destructive",
+  frontend: "bg-accent",
+  worker: "bg-warning",
 };
 
 export const CustomNode = memo(({ data, id, type }: NodeProps) => {
@@ -31,7 +31,7 @@ export const CustomNode = memo(({ data, id, type }: NodeProps) => {
 
   return (
     <Card
-      className="min-w-[200px] shadow-lg border-2 hover:shadow-xl transition-all cursor-pointer hover:border-primary/50"
+      className="min-w-[200px] shadow-lg shadow-primary/10 border-2 hover:shadow-2xl hover:shadow-primary/20 transition-all cursor-pointer hover:border-primary/70 hover:scale-105"
       onClick={() => onConfigure?.(id)}
     >
       <Handle
@@ -42,7 +42,7 @@ export const CustomNode = memo(({ data, id, type }: NodeProps) => {
 
       <div className="p-4">
         <div className="flex items-center gap-3 mb-2">
-          <div className={`p-2 rounded-lg ${color}`}>
+          <div className={`p-2 rounded-lg ${color} shadow-md`}>
             <Icon className="h-4 w-4 text-white" />
           </div>
           <div className="flex-1 min-w-0">
