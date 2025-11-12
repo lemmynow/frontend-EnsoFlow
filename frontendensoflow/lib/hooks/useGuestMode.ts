@@ -1,33 +1,38 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const GUEST_MODE_KEY = "ensoflow_guest_mode";
 
-export function useGuestMode() {
-  const [isGuestMode, setIsGuestMode] = useState(false);
-  const [isInitialized, setIsInitialized] = useState(false);
+// Helper to check if we're on the client
+const isClient = typeof window !== "undefined";
 
-  useEffect(() => {
-    // Check localStorage for guest mode flag
-    const guestModeFlag = localStorage.getItem(GUEST_MODE_KEY);
-    setIsGuestMode(guestModeFlag === "true");
-    setIsInitialized(true);
-  }, []);
+export function useGuestMode() {
+  const [isGuestMode, setIsGuestMode] = useState<boolean>(() => {
+    // Initialize from localStorage on first render (client-side only)
+    if (isClient) {
+      return localStorage.getItem(GUEST_MODE_KEY) === "true";
+    }
+    return false;
+  });
 
   const enableGuestMode = () => {
-    localStorage.setItem(GUEST_MODE_KEY, "true");
+    if (isClient) {
+      localStorage.setItem(GUEST_MODE_KEY, "true");
+    }
     setIsGuestMode(true);
   };
 
   const disableGuestMode = () => {
-    localStorage.removeItem(GUEST_MODE_KEY);
+    if (isClient) {
+      localStorage.removeItem(GUEST_MODE_KEY);
+    }
     setIsGuestMode(false);
   };
 
   return {
     isGuestMode,
-    isInitialized,
+    isInitialized: isClient, // We're initialized when we're on the client
     enableGuestMode,
     disableGuestMode,
   };
