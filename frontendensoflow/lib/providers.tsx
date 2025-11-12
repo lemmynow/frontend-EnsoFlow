@@ -9,26 +9,38 @@ const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: false,
       retry: 1,
+      // Reduce stale time to help with mock data updates
+      staleTime: 0,
     },
   },
 });
 
+// Check if mock mode is enabled
+const useMockData = process.env.NEXT_PUBLIC_USE_MOCK_DATA === "true";
+
 export function Providers({ children }: { children: ReactNode }) {
-  const [mockingInitialized, setMockingInitialized] = useState(false);
+  const [mockingInitialized, setMockingInitialized] = useState(!useMockData);
 
   useEffect(() => {
     async function enableMocking() {
-      await initMocks();
-      setMockingInitialized(true);
+      if (useMockData) {
+        console.log("🎭 Mock mode enabled - using mock data");
+        await initMocks();
+        setMockingInitialized(true);
+      }
     }
 
     enableMocking();
   }, []);
 
-  if (!mockingInitialized && process.env.NODE_ENV === "development") {
+  // Show loading spinner while MSW is initializing
+  if (!mockingInitialized) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="text-sm text-muted-foreground">Initializing mock data...</p>
+        </div>
       </div>
     );
   }
