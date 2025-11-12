@@ -25,8 +25,23 @@ export function Providers({ children }: { children: ReactNode }) {
     async function enableMocking() {
       if (useMockData) {
         console.log("🎭 Mock mode enabled - using mock data");
-        await initMocks();
-        setMockingInitialized(true);
+
+        // Set a timeout to prevent infinite loading
+        const timeout = setTimeout(() => {
+          console.warn("⚠️  MSW initialization timeout, continuing anyway");
+          setMockingInitialized(true);
+        }, 5000); // 5 second timeout
+
+        try {
+          await initMocks();
+          clearTimeout(timeout);
+          console.log("✅ Mocking initialized successfully");
+          setMockingInitialized(true);
+        } catch (error) {
+          clearTimeout(timeout);
+          console.error("❌ Failed to initialize mocking:", error);
+          setMockingInitialized(true);
+        }
       }
     }
 
