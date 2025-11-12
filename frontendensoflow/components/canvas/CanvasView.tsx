@@ -44,16 +44,21 @@ const getNodeId = () => `node-${nodeId++}`;
 
 export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }: CanvasViewProps) {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [configModalOpen, setConfigModalOpen] = useState(false);
 
+  const handleConfigureNode = useCallback((nodeId: string) => {
+    setSelectedNode(nodeId);
+    setConfigModalOpen(true);
+  }, []);
+
   // Load initial canvas
   useEffect(() => {
     if (initialCanvas) {
-      const loadedNodes = initialCanvas.nodes.map((node) => ({
+      const loadedNodes: Node[] = initialCanvas.nodes.map((node) => ({
         id: node.id,
         type: node.type,
         position: node.position,
@@ -63,7 +68,7 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
         },
       }));
 
-      const loadedEdges = initialCanvas.edges.map((edge) => ({
+      const loadedEdges: Edge[] = initialCanvas.edges.map((edge) => ({
         id: edge.id,
         source: edge.source,
         target: edge.target,
@@ -74,7 +79,7 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
       setNodes(loadedNodes);
       setEdges(loadedEdges);
     }
-  }, [initialCanvas]);
+  }, [initialCanvas, handleConfigureNode, setNodes, setEdges]);
 
   const onConnect = useCallback(
     (params: Connection) => {
@@ -139,15 +144,10 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
         return updatedNodes;
       });
     },
-    [reactFlowInstance, setNodes]
+    [reactFlowInstance, setNodes, handleConfigureNode]
   );
 
-  const handleConfigureNode = (nodeId: string) => {
-    setSelectedNode(nodeId);
-    setConfigModalOpen(true);
-  };
-
-  const handleSaveNodeConfig = (config: Record<string, unknown>) => {
+  const handleSaveNodeConfig = useCallback((config: Record<string, unknown>) => {
     if (!selectedNode) return;
 
     setNodes((nds) =>
@@ -157,9 +157,9 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
           : node
       )
     );
-  };
+  }, [selectedNode, setNodes]);
 
-  const handleSaveCanvas = () => {
+  const handleSaveCanvas = useCallback(() => {
     const canvas: Canvas = {
       nodes: nodes.map((node) => ({
         id: node.id,
@@ -178,12 +178,12 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
     localStorage.setItem("canvas-autosave", JSON.stringify(canvas));
 
     onSave?.(canvas);
-  };
+  }, [nodes, edges, onSave]);
 
-  const handleDragStart = (event: React.DragEvent, nodeType: string) => {
+  const handleDragStart = useCallback((event: React.DragEvent, nodeType: string) => {
     event.dataTransfer.setData("application/reactflow", nodeType);
     event.dataTransfer.effectAllowed = "move";
-  };
+  }, []);
 
   const selectedNodeData = nodes.find((n) => n.id === selectedNode);
 
