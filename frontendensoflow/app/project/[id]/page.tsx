@@ -88,28 +88,28 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       <div className="min-h-screen bg-background">
         <Navbar />
 
-        <main className="container py-8">
+        <main className="container py-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
+            className="mb-12"
           >
-            <div className="flex items-start justify-between mb-4">
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-6">
               <div>
-                <h1 className="text-4xl font-bold mb-2">{project.name}</h1>
-                <p className="text-muted-foreground">
-                  Owner: {project.owner} • Created {formatDateTime(project.createdAt)}
+                <h1 className="text-4xl font-bold mb-3">{project.name}</h1>
+                <p className="text-muted-foreground text-lg">
+                  Owner: <span className="font-medium">{project.owner}</span> • Created {formatDateTime(project.createdAt)}
                 </p>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 flex-wrap">
                 {getStatusBadge(project.status)}
-                <Button asChild variant="outline" className="gap-2">
+                <Button asChild variant="outline" size="lg" className="gap-2">
                   <Link href={`/project/${resolvedParams.id}/canvas`}>
                     <Edit className="h-4 w-4" />
                     Edit Canvas
                   </Link>
                 </Button>
-                <Button onClick={handleDeploy} className="gap-2">
+                <Button onClick={handleDeploy} size="lg" className="gap-2">
                   <Play className="h-4 w-4" />
                   Deploy
                 </Button>
@@ -117,44 +117,44 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
             </div>
           </motion.div>
 
-          <Tabs_Root defaultValue="overview" className="space-y-6">
-            <TabsList>
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="canvas">Canvas</TabsTrigger>
-              <TabsTrigger value="resources">Resources</TabsTrigger>
-              <TabsTrigger value="endpoints">Endpoints</TabsTrigger>
+          <Tabs_Root defaultValue="overview" className="space-y-8">
+            <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
+              <TabsTrigger value="overview" className="text-base">Overview</TabsTrigger>
+              <TabsTrigger value="canvas" className="text-base">Canvas</TabsTrigger>
+              <TabsTrigger value="resources" className="text-base">Resources</TabsTrigger>
+              <TabsTrigger value="endpoints" className="text-base">Endpoints</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="overview" className="space-y-6">
-              <div className="grid gap-6 md:grid-cols-2">
-                <Card>
+            <TabsContent value="overview" className="space-y-8">
+              <div className="grid gap-8 md:grid-cols-2">
+                <Card className="border-2">
                   <CardHeader>
-                    <CardTitle>Project Info</CardTitle>
+                    <CardTitle className="text-xl">Project Info</CardTitle>
                     <CardDescription>Basic project information</CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Status</span>
-                      <span className="font-medium capitalize">{project.status}</span>
+                  <CardContent className="space-y-4">
+                    <div className="flex justify-between items-center py-2 border-b">
+                      <span className="text-muted-foreground font-medium">Status</span>
+                      <span className="font-semibold capitalize">{project.status}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Resources</span>
-                      <span className="font-medium">{project.canvas.nodes.length}</span>
+                    <div className="flex justify-between items-center py-2 border-b">
+                      <span className="text-muted-foreground font-medium">Resources</span>
+                      <span className="font-semibold">{project.canvas.nodes.length}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Connections</span>
-                      <span className="font-medium">{project.canvas.edges.length}</span>
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-muted-foreground font-medium">Connections</span>
+                      <span className="font-semibold">{project.canvas.edges.length}</span>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="border-2">
                   <CardHeader>
-                    <CardTitle>Quick Actions</CardTitle>
+                    <CardTitle className="text-xl">Quick Actions</CardTitle>
                     <CardDescription>Common project tasks</CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-2">
-                    <Button asChild variant="outline" className="w-full justify-start gap-2">
+                  <CardContent className="space-y-3">
+                    <Button asChild variant="outline" size="lg" className="w-full justify-start gap-2">
                       <Link href={`/project/${resolvedParams.id}/canvas`}>
                         <Edit className="h-4 w-4" />
                         Edit Canvas
@@ -162,6 +162,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                     </Button>
                     <Button
                       variant="outline"
+                      size="lg"
                       className="w-full justify-start gap-2"
                       onClick={handleDeploy}
                     >
@@ -174,9 +175,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
             </TabsContent>
 
             <TabsContent value="canvas">
-              <Card>
+              <Card className="border-2">
                 <CardHeader>
-                  <CardTitle>Canvas Preview</CardTitle>
+                  <CardTitle className="text-xl">Canvas Preview</CardTitle>
                   <CardDescription>Read-only view of your project canvas</CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
@@ -188,35 +189,35 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
             </TabsContent>
 
             <TabsContent value="resources">
-              <Card>
+              <Card className="border-2">
                 <CardHeader>
-                  <CardTitle>Provisioned Resources</CardTitle>
+                  <CardTitle className="text-xl">Provisioned Resources</CardTitle>
                   <CardDescription>
                     All resources created for this project
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {project.canvas.nodes.map((node) => (
                       <div
                         key={node.id}
-                        className="flex items-center justify-between p-4 border rounded-lg"
+                        className="flex items-center justify-between p-5 border-2 rounded-lg hover:shadow-md hover:border-primary/30 transition-all"
                       >
                         <div>
-                          <div className="font-medium capitalize">{node.type}</div>
-                          <div className="text-sm text-muted-foreground">
+                          <div className="font-semibold capitalize text-lg">{node.type}</div>
+                          <div className="text-sm text-muted-foreground mt-1">
                             {node.data.config.name as string || node.id}
                           </div>
                         </div>
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-sm text-muted-foreground bg-secondary/50 px-3 py-1 rounded-full">
                           {node.data.config.provider as string || node.data.config.template as string || "-"}
                         </div>
                       </div>
                     ))}
 
                     {project.canvas.nodes.length === 0 && (
-                      <div className="text-center py-8 text-muted-foreground">
-                        No resources yet. Add resources in the canvas builder.
+                      <div className="text-center py-12 text-muted-foreground">
+                        <p className="text-lg">No resources yet. Add resources in the canvas builder.</p>
                       </div>
                     )}
                   </div>
@@ -225,9 +226,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
             </TabsContent>
 
             <TabsContent value="endpoints">
-              <Card>
+              <Card className="border-2">
                 <CardHeader>
-                  <CardTitle>Deployment Endpoints</CardTitle>
+                  <CardTitle className="text-xl">Deployment Endpoints</CardTitle>
                   <CardDescription>Access your deployed application</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -235,13 +236,13 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                     {project.endpoints.map((endpoint, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between p-4 border rounded-lg"
+                        className="flex items-center justify-between p-5 border-2 rounded-lg hover:shadow-md hover:border-primary/30 transition-all"
                       >
                         <div>
-                          <div className="font-medium">{endpoint.name}</div>
-                          <div className="text-sm text-muted-foreground">{endpoint.url}</div>
+                          <div className="font-semibold text-lg">{endpoint.name}</div>
+                          <div className="text-sm text-muted-foreground mt-1">{endpoint.url}</div>
                         </div>
-                        <Button asChild variant="outline" size="sm" className="gap-2">
+                        <Button asChild variant="outline" size="lg" className="gap-2">
                           <a href={endpoint.url} target="_blank" rel="noopener noreferrer">
                             <ExternalLink className="h-4 w-4" />
                             Open
@@ -251,8 +252,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                     ))}
 
                     {project.endpoints.length === 0 && (
-                      <div className="text-center py-8 text-muted-foreground">
-                        No endpoints yet. Deploy your project to get endpoints.
+                      <div className="text-center py-12 text-muted-foreground">
+                        <p className="text-lg">No endpoints yet. Deploy your project to get endpoints.</p>
                       </div>
                     )}
                   </div>

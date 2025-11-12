@@ -67,10 +67,12 @@ export default function MarketplacePage() {
       <div className="min-h-screen bg-background">
         <Navbar />
 
-        <main className="container py-8">
-          <div className="mb-8">
-            <div className="flex items-center gap-2 mb-4">
-              <Sparkles className="h-8 w-8 text-primary" />
+        <main className="container py-12">
+          <div className="mb-12">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-primary/10 p-2 rounded-lg">
+                <Sparkles className="h-8 w-8 text-primary" />
+              </div>
               <h1 className="text-4xl font-bold">Marketplace</h1>
             </div>
             <p className="text-muted-foreground text-lg">
@@ -78,14 +80,14 @@ export default function MarketplacePage() {
             </p>
           </div>
 
-          <div className="mb-6">
-            <div className="relative max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <div className="mb-8">
+            <div className="relative max-w-xl">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
                 placeholder="Search templates..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-12 h-12 text-base"
               />
             </div>
           </div>
@@ -99,35 +101,36 @@ export default function MarketplacePage() {
               variants={container}
               initial="hidden"
               animate="show"
-              className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+              className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
             >
               {filteredTemplates?.map((template) => (
                 <motion.div key={template.id} variants={item}>
-                  <Card className="hover:shadow-lg transition-all duration-300 group h-full flex flex-col">
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="text-4xl mb-2">{template.icon}</div>
+                  <Card className="hover:shadow-xl hover:scale-[1.02] hover:border-primary/50 transition-all duration-300 group h-full flex flex-col border-2">
+                    <CardHeader className="pb-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="bg-primary/10 p-3 rounded-xl text-4xl">{template.icon}</div>
                       </div>
-                      <CardTitle className="group-hover:text-primary transition-colors">
+                      <CardTitle className="group-hover:text-primary transition-colors text-xl mb-2">
                         {template.name}
                       </CardTitle>
-                      <CardDescription className="line-clamp-2">
+                      <CardDescription className="line-clamp-3 text-sm leading-relaxed">
                         {template.description}
                       </CardDescription>
                     </CardHeader>
-                    <CardContent className="flex-1 flex flex-col justify-end">
-                      <div className="flex flex-wrap gap-1 mb-4">
+                    <CardContent className="flex-1 flex flex-col justify-end space-y-4">
+                      <div className="flex flex-wrap gap-2">
                         {template.tags.map((tag) => (
                           <span
                             key={tag}
-                            className="text-xs px-2 py-1 bg-secondary rounded-md"
+                            className="text-xs px-2.5 py-1 bg-secondary/70 rounded-full font-medium"
                           >
                             {tag}
                           </span>
                         ))}
                       </div>
                       <Button
-                        className="w-full"
+                        className="w-full gap-2"
+                        size="lg"
                         onClick={() => {
                           if (isGuestMode || !user) {
                             router.push("/login");
@@ -139,7 +142,7 @@ export default function MarketplacePage() {
                       >
                         {isGuestMode || !user ? (
                           <>
-                            <LogIn className="h-4 w-4 mr-2" />
+                            <LogIn className="h-4 w-4" />
                             Login to Use
                           </>
                         ) : (

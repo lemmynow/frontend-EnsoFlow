@@ -73,31 +73,33 @@ export default function LoginPage() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <div className="flex flex-col items-center mb-8">
+        <div className="flex flex-col items-center mb-10">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 260, damping: 20 }}
-            className="mb-4"
+            className="mb-6"
           >
-            <Layers className="h-16 w-16 text-primary" />
+            <div className="bg-primary text-primary-foreground p-4 rounded-2xl">
+              <Layers className="h-16 w-16" />
+            </div>
           </motion.div>
-          <h1 className="text-4xl font-bold">EnsoFlow</h1>
-          <p className="text-muted-foreground mt-2">Visual PaaS Platform</p>
+          <h1 className="text-4xl font-bold mb-2">EnsoFlow</h1>
+          <p className="text-muted-foreground text-lg">Visual PaaS Platform</p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Welcome Back</CardTitle>
-            <CardDescription>
+        <Card className="border-2 shadow-xl">
+          <CardHeader className="pb-6">
+            <CardTitle className="text-2xl">Welcome Back</CardTitle>
+            <CardDescription className="text-base">
               Sign in with your GitHub account to continue
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <Button
                 ref={buttonRef}
-                className="w-full gap-2 h-11"
+                className="w-full gap-2 h-12 text-base font-semibold"
                 size="lg"
                 onClick={handleLogin}
               >
@@ -107,10 +109,10 @@ export default function LoginPage() {
 
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
+                  <span className="w-full border-t-2" />
                 </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-card px-2 text-muted-foreground">
+                <div className="relative flex justify-center text-sm uppercase">
+                  <span className="bg-card px-3 text-muted-foreground font-medium">
                     Or
                   </span>
                 </div>
@@ -119,7 +121,7 @@ export default function LoginPage() {
               <Button
                 ref={guestButtonRef}
                 variant="outline"
-                className="w-full gap-2 h-11"
+                className="w-full gap-2 h-12 text-base font-semibold border-2"
                 size="lg"
                 onClick={handleGuestMode}
               >
@@ -128,7 +130,7 @@ export default function LoginPage() {
               </Button>
             </div>
 
-            <div className="mt-6 text-center text-sm text-muted-foreground">
+            <div className="mt-8 text-center text-sm text-muted-foreground">
               <p>By signing in, you agree to our Terms of Service</p>
             </div>
           </CardContent>
