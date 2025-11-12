@@ -109,6 +109,16 @@ export default function MarketplacePage() {
                     <CardHeader className="pb-4">
                       <div className="flex items-start justify-between mb-3">
                         <div className="bg-primary/10 p-3 rounded-xl text-4xl">{template.icon}</div>
+                        <div className="text-right">
+                          {template.price === 0 ? (
+                            <span className="text-lg font-bold text-green-600">Free</span>
+                          ) : (
+                            <div>
+                              <span className="text-2xl font-bold">${template.price}</span>
+                              <span className="text-sm text-muted-foreground">/use</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
                       <CardTitle className="group-hover:text-primary transition-colors text-xl mb-2">
                         {template.name}

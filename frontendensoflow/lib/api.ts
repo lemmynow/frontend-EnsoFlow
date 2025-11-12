@@ -33,6 +33,7 @@ export interface Template {
   icon: string;
   repoTemplate: string;
   tags: string[];
+  price: number; // Price in dollars (0 for free)
 }
 
 export interface CanvasNode {
