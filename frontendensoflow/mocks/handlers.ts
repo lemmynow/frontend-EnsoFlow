@@ -53,9 +53,25 @@ const mockTemplates = [
     repoTemplate: "react-vite-template",
     tags: ["frontend"],
   },
+  {
+    id: "tmpl-5",
+    name: "Django REST API",
+    description: "Python REST API with Django and PostgreSQL",
+    icon: "🐍",
+    repoTemplate: "django-rest-template",
+    tags: ["backend", "api", "python"],
+  },
+  {
+    id: "tmpl-6",
+    name: "Vue.js + Tailwind",
+    description: "Modern Vue.js app with Tailwind CSS",
+    icon: "💚",
+    repoTemplate: "vue-tailwind-template",
+    tags: ["frontend"],
+  },
 ];
 
-let mockProjects = [
+const mockProjects = [
   {
     id: "proj-1",
     name: "my-awesome-app",
@@ -107,6 +123,64 @@ let mockProjects = [
           },
         },
       ],
+      edges: [],
+    },
+    endpoints: [],
+  },
+  {
+    id: "proj-3",
+    name: "e-commerce-platform",
+    owner: "johndoe",
+    status: "deployed",
+    createdAt: new Date("2024-03-10").toISOString(),
+    canvas: {
+      nodes: [
+        {
+          id: "frontend1",
+          type: "frontend",
+          template: "react-vite",
+          position: { x: 100, y: 100 },
+          data: {
+            config: { framework: "react", build: "vite" },
+          },
+        },
+        {
+          id: "backend1",
+          type: "backend",
+          template: "express",
+          position: { x: 400, y: 100 },
+          data: {
+            config: { runtime: "node", framework: "express" },
+          },
+        },
+        {
+          id: "db2",
+          type: "database",
+          provider: "mongodb",
+          position: { x: 700, y: 100 },
+          data: {
+            config: { type: "mongodb", plan: "shared" },
+          },
+        },
+      ],
+      edges: [
+        { id: "e2", source: "frontend1", target: "backend1" },
+        { id: "e3", source: "backend1", target: "db2" },
+      ],
+    },
+    endpoints: [
+      { name: "Production", url: "https://shop.example.com" },
+      { name: "API", url: "https://api.shop.example.com" },
+    ],
+  },
+  {
+    id: "proj-4",
+    name: "blog-cms",
+    owner: "dev-team",
+    status: "draft",
+    createdAt: new Date("2024-04-05").toISOString(),
+    canvas: {
+      nodes: [],
       edges: [],
     },
     endpoints: [],

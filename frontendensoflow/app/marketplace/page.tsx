@@ -4,6 +4,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTemplates } from "@/lib/hooks/useTemplates";
 import { useCreateProject } from "@/lib/hooks/useProjects";
+import { useUser } from "@/lib/hooks/useUser";
+import { useGuestMode } from "@/lib/hooks/useGuestMode";
 import { AuthGuard } from "@/components/AuthGuard";
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
@@ -11,7 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Search, Sparkles } from "lucide-react";
+import { Search, Sparkles, LogIn } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { Template } from "@/lib/api";
 
@@ -32,6 +34,8 @@ const item = {
 
 export default function MarketplacePage() {
   const router = useRouter();
+  const { data: user } = useUser();
+  const { isGuestMode } = useGuestMode();
   const { data: templates, isLoading } = useTemplates();
   const createProject = useCreateProject();
   const [searchQuery, setSearchQuery] = useState("");
@@ -59,7 +63,7 @@ export default function MarketplacePage() {
   };
 
   return (
-    <AuthGuard>
+    <AuthGuard allowGuest={true}>
       <div className="min-h-screen bg-background">
         <Navbar />
 
@@ -125,11 +129,22 @@ export default function MarketplacePage() {
                       <Button
                         className="w-full"
                         onClick={() => {
-                          setSelectedTemplate(template);
-                          setProjectName(`${template.repoTemplate}-${Date.now()}`);
+                          if (isGuestMode || !user) {
+                            router.push("/login");
+                          } else {
+                            setSelectedTemplate(template);
+                            setProjectName(`${template.repoTemplate}-${Date.now()}`);
+                          }
                         }}
                       >
-                        Use Template
+                        {isGuestMode || !user ? (
+                          <>
+                            <LogIn className="h-4 w-4 mr-2" />
+                            Login to Use
+                          </>
+                        ) : (
+                          "Use Template"
+                        )}
                       </Button>
                     </CardContent>
                   </Card>

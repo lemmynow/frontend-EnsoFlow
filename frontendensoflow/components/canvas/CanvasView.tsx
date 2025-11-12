@@ -39,6 +39,12 @@ interface CanvasViewProps {
   readOnly?: boolean;
 }
 
+// Type for ReactFlow instance with project method (for older versions)
+type ReactFlowInstanceWithProject = {
+  project: (position: { x: number; y: number }) => { x: number; y: number };
+  [key: string]: unknown;
+};
+
 let nodeId = 0;
 const getNodeId = () => `node-${nodeId++}`;
 
@@ -46,10 +52,9 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstanceWithProject | null>(null);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [configModalOpen, setConfigModalOpen] = useState(false);
-
   const handleConfigureNode = useCallback((nodeId: string) => {
     setSelectedNode(nodeId);
     setConfigModalOpen(true);
@@ -147,7 +152,7 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
     [reactFlowInstance, setNodes, handleConfigureNode]
   );
 
-  const handleSaveNodeConfig = useCallback((config: Record<string, unknown>) => {
+  const handleSaveNodeConfig = (config: Record<string, unknown>) => {
     if (!selectedNode) return;
 
     setNodes((nds) =>
@@ -165,7 +170,9 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
         id: node.id,
         type: node.type || "default",
         position: node.position,
-        data: node.data,
+        data: {
+          config: (node.data.config as Record<string, unknown>) || {},
+        },
       })),
       edges: edges.map((edge) => ({
         id: edge.id,
@@ -220,7 +227,7 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
-            onInit={setReactFlowInstance}
+            onInit={(instance) => setReactFlowInstance(instance as unknown as ReactFlowInstanceWithProject)}
             onDrop={onDrop}
             onDragOver={onDragOver}
             nodeTypes={nodeTypes}
