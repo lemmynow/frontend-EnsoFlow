@@ -55,7 +55,7 @@ const mockTemplates = [
   },
 ];
 
-let mockProjects = [
+const mockProjects = [
   {
     id: "proj-1",
     name: "my-awesome-app",

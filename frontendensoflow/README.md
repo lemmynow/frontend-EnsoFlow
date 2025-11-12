@@ -68,6 +68,7 @@ A modern, visual Platform-as-a-Service (PaaS) frontend built with Next.js, featu
 
 - Node.js 18+
 - npm, yarn, or pnpm
+- A backend server (see Backend Setup below)
 
 ### Installation
 
@@ -90,7 +91,60 @@ Edit `.env.local` with your configuration:
 NEXT_PUBLIC_API_BASE_URL=http://localhost:4000
 NEXT_PUBLIC_GITHUB_OAUTH_URL=http://localhost:4000/auth/github
 NODE_ENV=development
+NEXT_PUBLIC_ENABLE_GUEST_MODE=true
 ```
+
+### Backend Setup (GitHub OAuth)
+
+To enable GitHub OAuth login, you need a backend server that handles the OAuth flow:
+
+1. **Create a GitHub OAuth App:**
+   - Go to https://github.com/settings/developers
+   - Click "New OAuth App"
+   - Set **Application name**: Your app name
+   - Set **Homepage URL**: `http://localhost:3000` (or your production URL)
+   - Set **Authorization callback URL**: `http://localhost:4000/auth/github/callback`
+   - Click "Register application"
+   - Copy the **Client ID** and **Client Secret**
+
+2. **Configure Your Backend:**
+   Your backend needs to implement these endpoints:
+
+   - `GET /auth/github` - Redirects to GitHub OAuth authorization
+   - `GET /auth/github/callback` - Handles OAuth callback, exchanges code for token
+   - `GET /api/user/me` - Returns current authenticated user
+
+   Example using Express.js:
+   ```javascript
+   app.get('/auth/github', (req, res) => {
+     const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${CALLBACK_URL}&scope=user:email`;
+     res.redirect(githubAuthUrl);
+   });
+
+   app.get('/auth/github/callback', async (req, res) => {
+     const { code } = req.query;
+     // Exchange code for access token
+     // Set session cookie
+     // Redirect to frontend
+   });
+   ```
+
+3. **Environment Variables for Backend:**
+   ```env
+   GITHUB_CLIENT_ID=your_client_id
+   GITHUB_CLIENT_SECRET=your_client_secret
+   GITHUB_CALLBACK_URL=http://localhost:4000/auth/github/callback
+   SESSION_SECRET=your_session_secret
+   FRONTEND_URL=http://localhost:3000
+   ```
+
+### Guest Mode
+
+EnsoFlow supports a **Guest Mode** that allows users to explore the marketplace without logging in:
+
+- Users can browse all templates in the marketplace
+- To create projects or access the dashboard, login is required
+- Toggle guest mode with `NEXT_PUBLIC_ENABLE_GUEST_MODE=true` in `.env.local`
 
 ### Development
 

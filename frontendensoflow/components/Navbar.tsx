@@ -3,19 +3,24 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUser } from "@/lib/hooks/useUser";
+import { useGuestMode } from "@/lib/hooks/useGuestMode";
 import { Button } from "./ui/button";
 import { motion } from "framer-motion";
-import { Home, Layers, ShoppingBag, User } from "lucide-react";
+import { Home, Layers, ShoppingBag, User, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const pathname = usePathname();
   const { data: user } = useUser();
+  const { isGuestMode, disableGuestMode } = useGuestMode();
 
-  const navItems = [
-    { href: "/dashboard", label: "Dashboard", icon: Home },
-    { href: "/marketplace", label: "Marketplace", icon: ShoppingBag },
-  ];
+  // Only show Dashboard if user is logged in
+  const navItems = user
+    ? [
+        { href: "/dashboard", label: "Dashboard", icon: Home },
+        { href: "/marketplace", label: "Marketplace", icon: ShoppingBag },
+      ]
+    : [{ href: "/marketplace", label: "Marketplace", icon: ShoppingBag }];
 
   return (
     <motion.nav
@@ -73,6 +78,16 @@ export function Navbar() {
                   className="h-8 w-8 rounded-full border-2 border-border"
                 />
               )}
+            </div>
+          ) : isGuestMode ? (
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 px-3 py-1 rounded-md bg-secondary text-secondary-foreground text-sm">
+                <Eye className="h-4 w-4" />
+                <span>Guest Mode</span>
+              </div>
+              <Button asChild size="sm" variant="outline">
+                <Link href="/login">Login</Link>
+              </Button>
             </div>
           ) : (
             <Button asChild size="sm">
