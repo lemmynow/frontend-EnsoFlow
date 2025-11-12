@@ -1,26 +1,54 @@
 @import "tailwindcss";
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
+  /* Modern gradient backgrounds - subtle but not boring */
+  --background: 240 20% 99%;
+  --foreground: 240 10% 15%;
+
+  /* Card with subtle elevation */
   --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
+  --card-foreground: 240 10% 15%;
+
+  /* Popover/Dialog */
   --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
-  --primary: 240 5.9% 10%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 240 5.9% 10%;
-  --radius: 0.5rem;
+  --popover-foreground: 240 10% 15%;
+
+  /* Primary - Vibrant Indigo (like Linear) */
+  --primary: 239 84% 67%;
+  --primary-foreground: 0 0% 100%;
+
+  /* Secondary - Purple accent for contrast */
+  --secondary: 270 91% 65%;
+  --secondary-foreground: 0 0% 100%;
+
+  /* Muted - Soft purple-gray for subtle elements */
+  --muted: 240 15% 96%;
+  --muted-foreground: 240 6% 50%;
+
+  /* Accent - Bright Cyan for highlights */
+  --accent: 189 94% 43%;
+  --accent-foreground: 0 0% 100%;
+
+  /* Destructive/Error - Vibrant but not harsh red */
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* Semantic status colors */
+  --success: 160 84% 39%;
+  --success-foreground: 0 0% 100%;
+
+  --warning: 38 92% 50%;
+  --warning-foreground: 0 0% 100%;
+
+  --info: 221 83% 53%;
+  --info-foreground: 0 0% 100%;
+
+  /* Borders and inputs - subtle purple tint */
+  --border: 240 15% 88%;
+  --input: 240 15% 92%;
+  --ring: 239 84% 67%;
+
+  --radius: 0.75rem;
 }
 
 @theme inline {
@@ -38,6 +66,12 @@
   --color-accent-foreground: hsl(var(--accent-foreground));
   --color-destructive: hsl(var(--destructive));
   --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-success: hsl(var(--success));
+  --color-success-foreground: hsl(var(--success-foreground));
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+  --color-info: hsl(var(--info));
+  --color-info-foreground: hsl(var(--info-foreground));
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
@@ -47,25 +81,52 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    /* Deep purple-tinted dark - not pure black! */
+    --background: 250 25% 8%;
+    --foreground: 240 10% 95%;
+
+    /* Cards slightly elevated with purple tint */
+    --card: 250 20% 12%;
+    --card-foreground: 240 10% 95%;
+
+    /* Popover */
+    --popover: 250 20% 12%;
+    --popover-foreground: 240 10% 95%;
+
+    /* Primary - Lighter indigo for dark mode */
+    --primary: 239 84% 70%;
+    --primary-foreground: 250 25% 8%;
+
+    /* Secondary - Vibrant purple */
+    --secondary: 270 91% 68%;
+    --secondary-foreground: 250 25% 8%;
+
+    /* Muted - Dark purple-gray */
+    --muted: 250 15% 18%;
+    --muted-foreground: 240 5% 65%;
+
+    /* Accent - Bright cyan pops on dark */
+    --accent: 189 94% 50%;
+    --accent-foreground: 250 25% 8%;
+
+    /* Destructive - Softer red for dark mode */
+    --destructive: 0 84% 65%;
+    --destructive-foreground: 250 25% 8%;
+
+    /* Semantic status colors - vibrant for dark mode */
+    --success: 160 84% 45%;
+    --success-foreground: 250 25% 8%;
+
+    --warning: 38 92% 55%;
+    --warning-foreground: 250 25% 8%;
+
+    --info: 221 83% 58%;
+    --info-foreground: 250 25% 8%;
+
+    /* Borders with subtle purple */
+    --border: 250 15% 22%;
+    --input: 250 15% 18%;
+    --ring: 239 84% 70%;
   }
 }
 
@@ -74,11 +135,70 @@
 }
 
 body {
-  background: hsl(var(--background));
+  background: linear-gradient(
+    135deg,
+    hsl(var(--background)) 0%,
+    hsl(240 20% 97%) 50%,
+    hsl(250 30% 96%) 100%
+  );
+  min-height: 100vh;
   color: hsl(var(--foreground));
   font-family: var(--font-sans, system-ui, sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: linear-gradient(
+      135deg,
+      hsl(250 25% 8%) 0%,
+      hsl(250 30% 10%) 50%,
+      hsl(260 25% 12%) 100%
+    );
+  }
+}
+
+/* Gradient utilities for personality */
+.gradient-primary {
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
+}
+
+.gradient-accent {
+  background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(var(--info)) 100%);
+}
+
+.gradient-success {
+  background: linear-gradient(135deg, hsl(var(--success)) 0%, hsl(var(--accent)) 100%);
+}
+
+/* Animated gradient border */
+.gradient-border {
+  position: relative;
+  border: 2px solid transparent;
+  background: hsl(var(--card));
+  background-clip: padding-box;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Glassmorphism effect */
+.glass {
+  background: hsl(var(--card) / 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid hsl(var(--border) / 0.5);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
 }
 
 /* Container with proper padding */
