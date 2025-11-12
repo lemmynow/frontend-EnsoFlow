@@ -44,8 +44,8 @@ const getNodeId = () => `node-${nodeId++}`;
 
 export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }: CanvasViewProps) {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [configModalOpen, setConfigModalOpen] = useState(false);
@@ -165,7 +165,9 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
         id: node.id,
         type: node.type || "default",
         position: node.position,
-        data: node.data,
+        data: {
+          config: (node.data.config as Record<string, unknown>) || {},
+        },
       })),
       edges: edges.map((edge) => ({
         id: edge.id,
