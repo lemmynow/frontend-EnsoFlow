@@ -76,11 +76,11 @@ export default function DashboardPage() {
       <div className="min-h-screen bg-background">
         <Navbar />
 
-        <main className="container py-8">
-          <div className="flex items-center justify-between mb-8">
+        <main className="container py-12">
+          <div className="flex items-center justify-between mb-12">
             <div>
-              <h1 className="text-4xl font-bold mb-2">Projects</h1>
-              <p className="text-muted-foreground">
+              <h1 className="text-4xl font-bold mb-3">Projects</h1>
+              <p className="text-muted-foreground text-lg">
                 Manage and deploy your applications
               </p>
             </div>
@@ -140,39 +140,37 @@ export default function DashboardPage() {
               variants={container}
               initial="hidden"
               animate="show"
-              className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+              className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
             >
               {projects?.map((project) => (
                 <motion.div key={project.id} variants={item}>
                   <Link href={`/project/${project.id}`}>
-                    <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer group">
-                      <CardHeader>
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <CardTitle className="group-hover:text-primary transition-colors">
+                    <Card className="hover:shadow-xl hover:scale-[1.02] hover:border-primary/50 transition-all duration-300 cursor-pointer group h-full border-2">
+                      <CardHeader className="pb-4">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <CardTitle className="group-hover:text-primary transition-colors text-xl mb-2 truncate">
                               {project.name}
                             </CardTitle>
-                            <CardDescription className="mt-1">
+                            <CardDescription className="text-sm">
                               {project.owner}
                             </CardDescription>
                           </div>
-                          <div className={`flex items-center gap-1 ${getStatusColor(project.status)}`}>
+                          <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary/50 ${getStatusColor(project.status)}`}>
                             {getStatusIcon(project.status)}
-                            <span className="text-xs font-medium capitalize">
+                            <span className="text-xs font-semibold capitalize">
                               {project.status}
                             </span>
                           </div>
                         </div>
                       </CardHeader>
-                      <CardContent>
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Database className="h-4 w-4" />
-                            <span>{project.canvas.nodes.length} resources</span>
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            Created {formatDate(project.createdAt)}
-                          </div>
+                      <CardContent className="space-y-4">
+                        <div className="flex items-center gap-2.5 text-sm text-muted-foreground bg-secondary/30 px-3 py-2 rounded-md">
+                          <Database className="h-4 w-4 text-primary" />
+                          <span className="font-medium">{project.canvas.nodes.length} resources</span>
+                        </div>
+                        <div className="text-xs text-muted-foreground pt-2 border-t">
+                          Created {formatDate(project.createdAt)}
                         </div>
                       </CardContent>
                     </Card>
@@ -182,15 +180,17 @@ export default function DashboardPage() {
 
               {projects?.length === 0 && (
                 <motion.div variants={item} className="col-span-full">
-                  <Card className="border-dashed">
-                    <CardContent className="flex flex-col items-center justify-center py-12">
-                      <Database className="h-12 w-12 text-muted-foreground mb-4" />
-                      <p className="text-lg font-medium mb-2">No projects yet</p>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        Create your first project to get started
+                  <Card className="border-dashed border-2">
+                    <CardContent className="flex flex-col items-center justify-center py-16">
+                      <div className="bg-secondary/50 p-4 rounded-full mb-6">
+                        <Database className="h-12 w-12 text-primary" />
+                      </div>
+                      <p className="text-xl font-semibold mb-2">No projects yet</p>
+                      <p className="text-muted-foreground mb-6 text-center max-w-md">
+                        Create your first project to get started with EnsoFlow
                       </p>
-                      <Button onClick={() => setIsDialogOpen(true)}>
-                        <Plus className="h-4 w-4 mr-2" />
+                      <Button size="lg" onClick={() => setIsDialogOpen(true)} className="gap-2">
+                        <Plus className="h-4 w-4" />
                         Create Project
                       </Button>
                     </CardContent>
