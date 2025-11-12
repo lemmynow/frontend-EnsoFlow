@@ -28,6 +28,7 @@ const mockTemplates = [
     icon: "⚡",
     repoTemplate: "nextjs-drizzle-template",
     tags: ["frontend", "fullstack"],
+    price: 49,
   },
   {
     id: "tmpl-2",
@@ -36,6 +37,7 @@ const mockTemplates = [
     icon: "🚀",
     repoTemplate: "nestjs-api-template",
     tags: ["backend", "api"],
+    price: 39,
   },
   {
     id: "tmpl-3",
@@ -44,6 +46,7 @@ const mockTemplates = [
     icon: "🍃",
     repoTemplate: "express-mongo-template",
     tags: ["backend", "api"],
+    price: 0,
   },
   {
     id: "tmpl-4",
@@ -52,6 +55,7 @@ const mockTemplates = [
     icon: "⚛️",
     repoTemplate: "react-vite-template",
     tags: ["frontend"],
+    price: 0,
   },
   {
     id: "tmpl-5",
@@ -60,6 +64,7 @@ const mockTemplates = [
     icon: "🐍",
     repoTemplate: "django-rest-template",
     tags: ["backend", "api", "python"],
+    price: 29,
   },
   {
     id: "tmpl-6",
@@ -68,6 +73,7 @@ const mockTemplates = [
     icon: "💚",
     repoTemplate: "vue-tailwind-template",
     tags: ["frontend"],
+    price: 0,
   },
 ];
 

@@ -2,9 +2,8 @@
 
 import { memo } from "react";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
-import { Database, Server, Globe, Cpu, Code, Zap, Settings } from "lucide-react";
+import { Database, Server, Globe, Cpu, Code, Zap } from "lucide-react";
 import { Card } from "../ui/card";
-import { Button } from "../ui/button";
 
 const iconMap: Record<string, React.ElementType> = {
   repo: Code,
@@ -31,7 +30,10 @@ export const CustomNode = memo(({ data, id, type }: NodeProps) => {
   const onConfigure = data.onConfigure as ((nodeId: string) => void) | undefined;
 
   return (
-    <Card className="min-w-[200px] shadow-lg border-2 hover:shadow-xl transition-shadow">
+    <Card
+      className="min-w-[200px] shadow-lg border-2 hover:shadow-xl transition-all cursor-pointer hover:border-primary/50"
+      onClick={() => onConfigure?.(id)}
+    >
       <Handle
         type="target"
         position={Position.Top}
@@ -39,7 +41,7 @@ export const CustomNode = memo(({ data, id, type }: NodeProps) => {
       />
 
       <div className="p-4">
-        <div className="flex items-center gap-3 mb-3">
+        <div className="flex items-center gap-3 mb-2">
           <div className={`p-2 rounded-lg ${color}`}>
             <Icon className="h-4 w-4 text-white" />
           </div>
@@ -52,7 +54,7 @@ export const CustomNode = memo(({ data, id, type }: NodeProps) => {
         </div>
 
         {Object.keys(config).length > 0 && (
-          <div className="text-xs space-y-1 mb-2">
+          <div className="text-xs space-y-1">
             {(config.provider as string) && (
               <div className="text-muted-foreground">
                 Provider: {config.provider as string}
@@ -65,16 +67,6 @@ export const CustomNode = memo(({ data, id, type }: NodeProps) => {
             )}
           </div>
         )}
-
-        <Button
-          size="sm"
-          variant="ghost"
-          className="w-full gap-2 text-xs h-7"
-          onClick={() => onConfigure?.(id)}
-        >
-          <Settings className="h-3 w-3" />
-          Configure
-        </Button>
       </div>
 
       <Handle

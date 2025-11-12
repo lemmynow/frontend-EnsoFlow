@@ -110,11 +110,23 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
   const onDrop = useCallback(
     (event: React.DragEvent) => {
       event.preventDefault();
-
-      if (!reactFlowWrapper.current || !reactFlowInstance) return;
+      event.stopPropagation();
 
       const type = event.dataTransfer.getData("application/reactflow");
-      if (!type) return;
+      if (!type) {
+        console.warn("No node type found in drag data");
+        return;
+      }
+
+      if (!reactFlowWrapper.current) {
+        console.warn("ReactFlow wrapper not found");
+        return;
+      }
+
+      if (!reactFlowInstance) {
+        console.warn("ReactFlow instance not initialized");
+        return;
+      }
 
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       const position = reactFlowInstance.project({
@@ -237,10 +249,12 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
             nodesDraggable={!readOnly}
             nodesConnectable={!readOnly}
             elementsSelectable={!readOnly}
+            edgesFocusable={!readOnly}
+            deleteKeyCode="Delete"
             minZoom={0.2}
             maxZoom={2}
           >
-            <Background variant={BackgroundVariant.Dots} gap={20} size={1} />
+            <Background variant={BackgroundVariant.Dots} gap={40} size={1} />
             <Controls />
             <MiniMap
               nodeColor={(node) => {
