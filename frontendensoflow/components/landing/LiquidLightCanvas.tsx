@@ -23,7 +23,10 @@ export function LiquidLightCanvas({
 
   // Track scroll progress and velocity for shader animations
   useEffect(() => {
-    const handleScroll = () => {
+    let rafId: number | null = null;
+    let pendingUpdate = false;
+
+    const updateScrollState = () => {
       const now = Date.now();
       const currentScrollY = window.scrollY;
       const deltaTime = now - lastScrollTime.current;
@@ -37,17 +40,31 @@ export function LiquidLightCanvas({
 
       // Update scroll progress
       const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = currentScrollY / scrollHeight;
+      const progress = scrollHeight > 0 ? currentScrollY / scrollHeight : 0;
       setScrollProgress(progress);
 
       lastScrollY.current = currentScrollY;
       lastScrollTime.current = now;
+      pendingUpdate = false;
+    };
+
+    const handleScroll = () => {
+      // Only schedule one update per frame
+      if (!pendingUpdate) {
+        pendingUpdate = true;
+        rafId = requestAnimationFrame(updateScrollState);
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Initial call
+    updateScrollState(); // Initial call
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+    };
   }, []);
 
   return (
