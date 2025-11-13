@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Zap, Users, Rocket, Shield, Layers, GitBranch } from "lucide-react";
+import { LiquidBeamBackground } from "./LiquidBeamBackground";
 
 const features = [
   {
@@ -73,6 +74,9 @@ const itemVariants = {
 export function FeatureGrid() {
   return (
     <section className="py-24 md:py-32 px-4 relative overflow-hidden bg-[#0A0A0C]">
+      {/* Liquid beam flows subtly behind features */}
+      <LiquidBeamBackground variant="features" opacity={0.3} />
+
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-1/2 left-0 w-96 h-96 bg-gradient-to-br from-[#5C5CF0]/20 to-transparent rounded-full blur-3xl" />
