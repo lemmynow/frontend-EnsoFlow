@@ -3,7 +3,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Play, Maximize2, Terminal, Workflow } from "lucide-react";
-import { BeamCollision } from "./BeamCollision";
 import { LiquidBeamBackground } from "./LiquidBeamBackground";
 
 export function Demo() {
@@ -22,11 +21,8 @@ export function Demo() {
       ref={containerRef}
       className="relative py-32 md:py-40 px-4 overflow-hidden bg-gradient-to-b from-[#0A0A0C] via-[#0D0D10] to-[#0A0A0C]"
     >
-      {/* Liquid beam continues from above */}
-      <LiquidBeamBackground variant="pre-collision" opacity={0.7} />
-
-      {/* BEAM COLLISION EFFECT - The dramatic centerpiece */}
-      <BeamCollision />
+      {/* Liquid beam continues from above - now with scroll-speed effect */}
+      <LiquidBeamBackground variant="hero" opacity={0.9} />
 
       <motion.div
         style={{ opacity, y, scale }}
