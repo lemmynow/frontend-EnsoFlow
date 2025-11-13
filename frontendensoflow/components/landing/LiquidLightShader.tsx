@@ -17,6 +17,7 @@ export function LiquidLightShader({
 }: LiquidLightShaderProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const particlesRef = useRef<THREE.Points>(null);
+  const blockRef = useRef<THREE.Mesh>(null);
 
   // Shader uniforms
   const uniforms = useMemo(
@@ -26,14 +27,20 @@ export function LiquidLightShader({
       uScrollProgress: { value: scrollProgress },
       uVariant: { value: variant === "hero" ? 0 : variant === "features" ? 1 : variant === "pre-collision" ? 2 : 3 },
       uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-      uBeamWidth: { value: 0.08 }, // 8% of screen width ≈ 100px on desktop
-      uFlowSpeed: { value: 0.15 },
-      uViscosity: { value: 0.6 },
-      uTurbulence: { value: 0.4 },
-      uGlowIntensity: { value: 1.2 },
+      uBeamWidth: { value: 0.12 },
+      uFlowSpeed: { value: 0.8 }, // Increased for more visible falling
+      uViscosity: { value: 0.4 },
+      uTurbulence: { value: 0.3 },
+      uGlowIntensity: { value: 1.4 },
       uCoreColor: { value: new THREE.Color("#FFFFFF") },
       uBeamColor: { value: new THREE.Color("#5141FF") },
       uGlowColor: { value: new THREE.Color("#C0A8FF") },
+      // Block collision parameters
+      uBlockPosX: { value: 0.5 }, // Center x
+      uBlockPosY: { value: 0.5 }, // Middle of screen
+      uBlockWidth: { value: 0.25 }, // Width of block
+      uBlockHeight: { value: 0.15 }, // Height of block
+      uGravity: { value: 0.5 }, // Gravity strength
     }),
     [opacity, scrollProgress, variant]
   );
@@ -48,7 +55,7 @@ export function LiquidLightShader({
     }
   `;
 
-  // Fragment shader - the magic happens here
+  // Fragment shader with collision physics
   const fragmentShader = `
     uniform float uTime;
     uniform float uOpacity;
@@ -63,10 +70,15 @@ export function LiquidLightShader({
     uniform vec3 uCoreColor;
     uniform vec3 uBeamColor;
     uniform vec3 uGlowColor;
+    uniform float uBlockPosX;
+    uniform float uBlockPosY;
+    uniform float uBlockWidth;
+    uniform float uBlockHeight;
+    uniform float uGravity;
 
     varying vec2 vUv;
 
-    // Simplex noise implementation for organic fluid motion
+    // Simplex noise implementation
     vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
     vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
     vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
@@ -95,148 +107,241 @@ export function LiquidLightShader({
       return 130.0 * dot(m, g);
     }
 
-    // Fractional Brownian Motion for layered turbulence
-    float fbm(vec2 p) {
-      float value = 0.0;
-      float amplitude = 0.5;
-      float frequency = 1.0;
+    // Check if point is inside block
+    bool insideBlock(vec2 pos) {
+      float left = uBlockPosX - uBlockWidth * 0.5;
+      float right = uBlockPosX + uBlockWidth * 0.5;
+      float top = uBlockPosY - uBlockHeight * 0.5;
+      float bottom = uBlockPosY + uBlockHeight * 0.5;
 
-      for(int i = 0; i < 5; i++) {
-        value += amplitude * snoise(p * frequency);
-        frequency *= 2.0;
-        amplitude *= 0.5;
+      return pos.x >= left && pos.x <= right && pos.y >= top && pos.y <= bottom;
+    }
+
+    // Distance to block (for soft collision)
+    float distanceToBlock(vec2 pos) {
+      float left = uBlockPosX - uBlockWidth * 0.5;
+      float right = uBlockPosX + uBlockWidth * 0.5;
+      float top = uBlockPosY - uBlockHeight * 0.5;
+      float bottom = uBlockPosY + uBlockHeight * 0.5;
+
+      float dx = max(left - pos.x, max(0.0, pos.x - right));
+      float dy = max(top - pos.y, max(0.0, pos.y - bottom));
+
+      return sqrt(dx * dx + dy * dy);
+    }
+
+    // Simulate falling particle with collision
+    vec2 simulateParticle(vec2 startPos, float timeOffset, float particleId) {
+      float t = mod(uTime * uFlowSpeed + timeOffset, 8.0);
+
+      // Initial position at top
+      vec2 pos = startPos;
+      pos.y = -0.1 + t * 0.125; // Falling with constant velocity
+
+      // Add gravity acceleration
+      float gravity = uGravity * t * t * 0.01;
+      pos.y += gravity;
+
+      // Horizontal wobble (natural turbulence)
+      float wobble = snoise(vec2(particleId * 10.0, uTime * 0.5 + timeOffset)) * 0.02;
+      pos.x += wobble;
+
+      // Collision detection with block
+      float blockTop = uBlockPosY - uBlockHeight * 0.5;
+      float blockBottom = uBlockPosY + uBlockHeight * 0.5;
+      float blockLeft = uBlockPosX - uBlockWidth * 0.5;
+      float blockRight = uBlockPosX + uBlockWidth * 0.5;
+
+      // Check if particle is at block height
+      if (pos.y >= blockTop - 0.05 && pos.y <= blockBottom + 0.3) {
+        // Check if particle would hit block
+        if (abs(pos.x - uBlockPosX) < uBlockWidth * 0.5 + 0.01) {
+          // Split to sides based on which side is closer
+          float distToCenter = pos.x - uBlockPosX;
+          float side = sign(distToCenter);
+          if (side == 0.0) side = 1.0;
+
+          // Push particle to the side
+          float pushStrength = smoothstep(blockTop, blockTop + 0.05, pos.y);
+          pos.x = uBlockPosX + side * (uBlockWidth * 0.5 + 0.02 + (pos.y - blockTop) * 0.15);
+
+          // Add dripping effect on sides - slower fall
+          if (pos.y > blockTop) {
+            float dripTime = (pos.y - blockTop) * 3.0;
+            pos.y = blockTop + dripTime * 0.08; // Much slower dripping
+
+            // Oscillate slightly while dripping
+            pos.x += sin(dripTime * 2.0 + particleId) * 0.005;
+          }
+        }
       }
 
-      return value;
+      return pos;
     }
 
-    // Smooth radial gradient for beam core
-    float radialBeam(vec2 uv, float width) {
-      float dist = abs(uv.x - 0.5) / width;
-      return 1.0 - smoothstep(0.0, 1.0, dist);
+    // Draw particle glow
+    float drawParticle(vec2 uv, vec2 particlePos, float size, float intensity) {
+      float dist = length(uv - particlePos);
+      float particle = smoothstep(size, 0.0, dist) * intensity;
+      float glow = smoothstep(size * 4.0, 0.0, dist) * intensity * 0.3;
+      return particle + glow;
     }
 
-    // Liquid flow distortion
-    vec2 liquidDistortion(vec2 uv, float time) {
-      // Vertical flow with varying speed (simulates viscosity)
-      float flowY = time * uFlowSpeed;
+    // Main beam shape with collision
+    float liquidBeam(vec2 uv) {
+      float beamIntensity = 0.0;
 
-      // Horizontal wobble (turbulence)
-      float wobbleFreq = 2.0 + uTurbulence * 3.0;
-      float wobbleAmp = uTurbulence * 0.015;
-      float wobble = snoise(vec2(uv.y * wobbleFreq - flowY * 0.8, time * 0.3)) * wobbleAmp;
+      // Multiple particle streams
+      for(float i = 0.0; i < 25.0; i++) {
+        float particleId = i / 25.0;
+        float offset = particleId * 3.0;
 
-      // Organic flow noise (simulates fluid convection)
-      float flowNoise = fbm(vec2(uv.y * 3.0 - flowY, uv.x * 8.0 + time * 0.2)) * 0.02 * uViscosity;
-
-      return vec2(uv.x + wobble + flowNoise, uv.y);
-    }
-
-    // Internal particle system (glowing orbs floating in the beam)
-    float particles(vec2 uv, float time) {
-      float particleEffect = 0.0;
-
-      for(float i = 0.0; i < 5.0; i++) {
-        float seed = i * 12.345;
-        float speed = 0.1 + fract(seed * 0.1) * 0.15;
-        float offset = fract(seed * 0.2);
-        float wobble = sin(time * 0.5 + seed) * 0.02;
-
-        vec2 particlePos = vec2(
-          0.5 + wobble + snoise(vec2(i * 10.0, time * 0.2)) * 0.015,
-          fract((time * speed + offset) * 0.5) * 1.2 - 0.1
+        // Start position (top of screen, centered)
+        vec2 startPos = vec2(
+          0.5 + (particleId - 0.5) * 0.15, // Spread across beam width
+          -0.1
         );
 
-        float dist = length(uv - particlePos);
-        float size = 0.008 + fract(seed * 0.3) * 0.005;
-        particleEffect += smoothstep(size, 0.0, dist) * (0.3 + fract(seed) * 0.4);
+        vec2 particlePos = simulateParticle(startPos, offset, particleId);
+
+        // Only draw if on screen
+        if (particlePos.y < 1.2 && particlePos.y > -0.1) {
+          float size = 0.008 + sin(i * 10.0) * 0.003;
+          float intensity = 0.8 + sin(uTime + i) * 0.2;
+          beamIntensity += drawParticle(uv, particlePos, size, intensity);
+        }
       }
 
-      return particleEffect;
+      // Add continuous beam core (pre-collision)
+      float distFromCenter = abs(uv.x - 0.5);
+      float beamTop = 0.0;
+      float beamBottom = uBlockPosY - uBlockHeight * 0.5 - 0.02;
+
+      if (uv.y >= beamTop && uv.y <= beamBottom) {
+        float beamMask = smoothstep(uBeamWidth, 0.0, distFromCenter);
+        beamIntensity += beamMask * 0.6;
+
+        // Add flowing noise
+        float flowNoise = snoise(vec2(uv.x * 10.0, uv.y * 5.0 - uTime * 2.0)) * 0.5 + 0.5;
+        beamIntensity += beamMask * flowNoise * 0.3;
+      }
+
+      // Add side drips (continuous streams)
+      float blockTop = uBlockPosY - uBlockHeight * 0.5;
+      if (uv.y > blockTop) {
+        // Left side drip
+        float leftX = uBlockPosX - uBlockWidth * 0.5 - 0.02;
+        float distToLeftDrip = abs(uv.x - leftX);
+        float leftDripMask = smoothstep(0.02, 0.0, distToLeftDrip);
+        beamIntensity += leftDripMask * 0.4 * smoothstep(blockTop + 0.5, blockTop, uv.y);
+
+        // Right side drip
+        float rightX = uBlockPosX + uBlockWidth * 0.5 + 0.02;
+        float distToRightDrip = abs(uv.x - rightX);
+        float rightDripMask = smoothstep(0.02, 0.0, distToRightDrip);
+        beamIntensity += rightDripMask * 0.4 * smoothstep(blockTop + 0.5, blockTop, uv.y);
+      }
+
+      return beamIntensity;
     }
 
     void main() {
-      // Apply liquid distortion to UV coordinates
-      vec2 distortedUv = liquidDistortion(vUv, uTime);
+      vec2 uv = vUv;
 
-      // Create radial beam shape
-      float beamMask = radialBeam(distortedUv, uBeamWidth);
+      // Calculate beam intensity with collision physics
+      float beamMask = liquidBeam(uv);
 
-      // Add flowing turbulence
-      float turbulenceFlow = fbm(vec2(distortedUv.x * 5.0, distortedUv.y * 2.0 - uTime * uFlowSpeed * 2.0));
-      turbulenceFlow = turbulenceFlow * 0.5 + 0.5; // Normalize to 0-1
+      // Apply colors
+      float coreIntensity = pow(beamMask, 2.0);
+      float midIntensity = pow(beamMask, 1.2);
+      float glowIntensity = pow(beamMask, 0.6) * uGlowIntensity;
 
-      // Core beam intensity (bright center)
-      float coreIntensity = pow(beamMask, 2.5) * (0.7 + turbulenceFlow * 0.3);
-
-      // Mid beam (main color)
-      float midIntensity = pow(beamMask, 1.5) * (0.6 + turbulenceFlow * 0.4);
-
-      // Outer glow (soft diffusion)
-      float glowIntensity = pow(beamMask, 0.8) * uGlowIntensity;
-
-      // Vertical gradient (top to bottom fade)
-      float verticalGradient = smoothstep(0.0, 0.3, vUv.y) * smoothstep(1.0, 0.6, vUv.y);
-
-      // Add internal particles
-      float particleGlow = particles(distortedUv, uTime) * beamMask;
-
-      // Compose colors
       vec3 coreLayer = uCoreColor * coreIntensity;
-      vec3 beamLayer = uBeamColor * midIntensity;
-      vec3 glowLayer = uGlowColor * glowIntensity * 0.5;
-      vec3 particleLayer = uCoreColor * particleGlow * 1.5;
+      vec3 beamLayer = uBeamColor * midIntensity * 1.5;
+      vec3 glowLayer = uGlowColor * glowIntensity * 0.7;
 
-      // Combine all layers
-      vec3 finalColor = coreLayer + beamLayer + glowLayer + particleLayer;
+      vec3 finalColor = coreLayer + beamLayer + glowLayer;
 
-      // Apply vertical gradient and variant adjustments
+      // Variant opacity
       float variantOpacity = 1.0;
-      if(uVariant == 1.0) { // features
+      if(uVariant == 1.0) {
         variantOpacity = 0.3;
-      } else if(uVariant == 2.0) { // pre-collision
-        variantOpacity = 0.8 + sin(uTime * 2.0) * 0.2; // Pulsing
-      } else if(uVariant == 3.0) { // post-collision
+      } else if(uVariant == 2.0) {
+        variantOpacity = 0.8 + sin(uTime * 2.0) * 0.2;
+      } else if(uVariant == 3.0) {
         variantOpacity = 0.2;
       }
 
-      float finalAlpha = beamMask * verticalGradient * uOpacity * variantOpacity;
+      float finalAlpha = beamMask * uOpacity * variantOpacity;
 
-      // Scroll fade out
+      // Scroll fade
       finalAlpha *= 1.0 - uScrollProgress * 0.7;
+
+      // Draw block outline (for visibility)
+      float blockDist = distanceToBlock(uv);
+      if (blockDist < 0.005 && !insideBlock(uv)) {
+        finalColor = mix(finalColor, uBeamColor * 2.0, 0.5);
+        finalAlpha = max(finalAlpha, 0.8);
+      }
 
       gl_FragColor = vec4(finalColor, finalAlpha);
     }
   `;
 
-  // Particle geometry for floating orbs
+  // Enhanced particle system with physics
   const particleGeometry = useMemo(() => {
     const geometry = new THREE.BufferGeometry();
-    const count = 30;
+    const count = 100; // More particles for better effect
     const positions = new Float32Array(count * 3);
+    const velocities = new Float32Array(count * 3);
+    const ages = new Float32Array(count);
 
     for (let i = 0; i < count; i++) {
-      positions[i * 3 + 0] = (Math.random() - 0.5) * 0.3; // x
-      positions[i * 3 + 1] = Math.random() * 8 - 1; // y
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 0.2; // z
+      // Start at top, centered around beam
+      positions[i * 3 + 0] = (Math.random() - 0.5) * 0.4;
+      positions[i * 3 + 1] = 3 + Math.random() * 2;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 0.1;
+
+      velocities[i * 3 + 0] = (Math.random() - 0.5) * 0.01;
+      velocities[i * 3 + 1] = -0.02 - Math.random() * 0.01; // Downward velocity
+      velocities[i * 3 + 2] = 0;
+
+      ages[i] = Math.random();
     }
 
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
+    geometry.setAttribute('age', new THREE.BufferAttribute(ages, 1));
+
     return geometry;
   }, []);
 
   const particleMaterial = useMemo(() => {
     return new THREE.PointsMaterial({
-      size: 0.03,
+      size: 0.04,
       color: new THREE.Color("#FFFFFF"),
       transparent: true,
-      opacity: 0.6,
+      opacity: 0.7,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
   }, []);
 
-  // Animate shader uniforms and particles
+  // Block geometry (visual representation)
+  const blockGeometry = useMemo(() => {
+    return new THREE.PlaneGeometry(0.5, 0.3);
+  }, []);
+
+  const blockMaterial = useMemo(() => {
+    return new THREE.MeshBasicMaterial({
+      color: new THREE.Color("#5141FF"),
+      transparent: true,
+      opacity: 0.2,
+      side: THREE.DoubleSide,
+    });
+  }, []);
+
+  // Animate shader uniforms and particles with collision physics
   useFrame((state) => {
     if (meshRef.current) {
       const material = meshRef.current.material as THREE.ShaderMaterial;
@@ -244,31 +349,84 @@ export function LiquidLightShader({
       material.uniforms.uScrollProgress.value = scrollProgress;
     }
 
-    // Animate particles
+    // Animate particles with gravity and collision
     if (particlesRef.current) {
       const positions = particlesRef.current.geometry.attributes.position.array as Float32Array;
+      const velocities = particlesRef.current.geometry.attributes.velocity.array as Float32Array;
+      const ages = particlesRef.current.geometry.attributes.age.array as Float32Array;
+
+      const blockTop = 0.0;
+      const blockBottom = -0.6;
+      const blockLeft = -0.25;
+      const blockRight = 0.25;
 
       for (let i = 0; i < positions.length; i += 3) {
-        // Vertical flow
-        positions[i + 1] += 0.002 + Math.random() * 0.001;
+        const idx = i / 3;
 
-        // Reset particles that fall off screen
-        if (positions[i + 1] > 4) {
-          positions[i + 1] = -1;
-          positions[i] = (Math.random() - 0.5) * 0.3;
+        // Apply gravity
+        velocities[i + 1] -= 0.0008;
+
+        // Update position
+        positions[i] += velocities[i];
+        positions[i + 1] += velocities[i + 1];
+        positions[i + 2] += velocities[i + 2];
+
+        // Collision with block
+        const px = positions[i];
+        const py = positions[i + 1];
+
+        // Check if particle is hitting block from top
+        if (py <= blockTop && py >= blockTop - 0.1) {
+          if (px >= blockLeft && px <= blockRight) {
+            // Hit the block - split to sides
+            const distToCenter = px;
+            const side = distToCenter >= 0 ? 1 : -1;
+
+            // Push to the side
+            velocities[i] = side * 0.015;
+            velocities[i + 1] = -0.008; // Slower fall after collision
+
+            positions[i] += side * 0.05;
+          }
         }
 
-        // Subtle horizontal drift
-        positions[i] += Math.sin(state.clock.elapsedTime + i) * 0.0001;
+        // Keep particles along block sides
+        if (py < blockTop && py > blockBottom) {
+          if (Math.abs(px - blockLeft) < 0.05) {
+            // Stick to left side
+            positions[i] = blockLeft - 0.02;
+            velocities[i] *= 0.5;
+            velocities[i + 1] = -0.01; // Slow drip
+          } else if (Math.abs(px - blockRight) < 0.05) {
+            // Stick to right side
+            positions[i] = blockRight + 0.02;
+            velocities[i] *= 0.5;
+            velocities[i + 1] = -0.01; // Slow drip
+          }
+        }
+
+        // Reset particles that fall off screen
+        if (positions[i + 1] < -4) {
+          positions[i + 1] = 3 + Math.random() * 2;
+          positions[i] = (Math.random() - 0.5) * 0.4;
+          velocities[i] = (Math.random() - 0.5) * 0.01;
+          velocities[i + 1] = -0.02 - Math.random() * 0.01;
+          ages[idx] = 0;
+        }
+
+        // Age particles
+        ages[idx] += 0.01;
       }
 
       particlesRef.current.geometry.attributes.position.needsUpdate = true;
+      particlesRef.current.geometry.attributes.velocity.needsUpdate = true;
+      particlesRef.current.geometry.attributes.age.needsUpdate = true;
     }
   });
 
   return (
     <group>
-      {/* Main liquid light beam shader */}
+      {/* Main liquid light beam shader with collision */}
       <mesh ref={meshRef} position={[0, 0, 0]}>
         <planeGeometry args={[2, 8, 1, 1]} />
         <shaderMaterial
@@ -282,7 +440,15 @@ export function LiquidLightShader({
         />
       </mesh>
 
-      {/* Floating particle system */}
+      {/* Collision block */}
+      <mesh
+        ref={blockRef}
+        position={[0, 0, 0.1]}
+        geometry={blockGeometry}
+        material={blockMaterial}
+      />
+
+      {/* Floating particle system with physics */}
       <points
         ref={particlesRef}
         geometry={particleGeometry}
