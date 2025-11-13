@@ -16,14 +16,32 @@ export function LiquidLightCanvas({
   className = ""
 }: LiquidLightCanvasProps) {
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [scrollVelocity, setScrollVelocity] = useState(0);
   const canvasRef = useRef<HTMLDivElement>(null);
+  const lastScrollY = useRef(0);
+  const lastScrollTime = useRef(Date.now());
 
-  // Track scroll progress for shader animations
+  // Track scroll progress and velocity for shader animations
   useEffect(() => {
     const handleScroll = () => {
+      const now = Date.now();
+      const currentScrollY = window.scrollY;
+      const deltaTime = now - lastScrollTime.current;
+      const deltaScroll = currentScrollY - lastScrollY.current;
+
+      // Calculate scroll velocity (pixels per millisecond)
+      const velocity = deltaTime > 0 ? Math.abs(deltaScroll / deltaTime) : 0;
+
+      // Smooth the velocity with exponential decay
+      setScrollVelocity(prev => prev * 0.85 + velocity * 0.15);
+
+      // Update scroll progress
       const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = window.scrollY / scrollHeight;
+      const progress = currentScrollY / scrollHeight;
       setScrollProgress(progress);
+
+      lastScrollY.current = currentScrollY;
+      lastScrollTime.current = now;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -60,6 +78,7 @@ export function LiquidLightCanvas({
           variant={variant}
           opacity={opacity}
           scrollProgress={scrollProgress}
+          scrollVelocity={scrollVelocity}
         />
       </Canvas>
     </div>
