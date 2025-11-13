@@ -65,7 +65,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   }
 
   const getStatusBadge = (status: string) => {
-    const statusConfig: Record<string, { color: string; icon: React.ElementType }> = {
+    const statusConfig: Record<string, { color: string; icon: typeof CheckCircle2 }> = {
       deployed: { color: "text-green-500 bg-green-500/10", icon: CheckCircle2 },
       building: { color: "text-yellow-500 bg-yellow-500/10", icon: Clock },
       draft: { color: "text-gray-500 bg-gray-500/10", icon: Clock },

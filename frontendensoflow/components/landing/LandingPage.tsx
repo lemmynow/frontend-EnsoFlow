@@ -11,8 +11,8 @@ import { Footer } from "./Footer";
 export function LandingPage() {
   return (
     <div className="relative bg-[#0A0A0C] overflow-hidden">
-      {/* Main content */}
-      <main className="relative">
+      {/* Main content - positioned above WebGL canvas */}
+      <main className="relative z-10">
         {/* Hero - Cinematic entrance with beam effects */}
         <Hero />
 

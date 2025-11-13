@@ -8,7 +8,7 @@ export interface NodeType {
   id: string;
   type: string;
   label: string;
-  icon: React.ElementType;
+  icon: typeof Code;
   color: string;
   description: string;
 }
