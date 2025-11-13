@@ -264,12 +264,12 @@ export function LiquidLightShader({
 
       // Variant opacity
       float variantOpacity = 1.0;
-      if(uVariant == 1.0) {
-        variantOpacity = 0.3;
-      } else if(uVariant == 2.0) {
+      if(uVariant == 1.0) { // features - very subtle
+        variantOpacity = 0.08;
+      } else if(uVariant == 2.0) { // pre-collision
         variantOpacity = 0.8 + sin(uTime * 2.0) * 0.2;
-      } else if(uVariant == 3.0) {
-        variantOpacity = 0.2;
+      } else if(uVariant == 3.0) { // post-collision
+        variantOpacity = 0.15;
       }
 
       float finalAlpha = beamMask * uOpacity * variantOpacity;
