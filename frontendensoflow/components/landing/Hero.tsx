@@ -37,7 +37,7 @@ export function Hero() {
       filter: "blur(0px)",
       transition: {
         duration: 1.2,
-        ease: [0.19, 1, 0.22, 1], // easeOutExpo
+        ease: [0.19, 1, 0.22, 1] as const, // easeOutExpo
       }
     }
   };

@@ -120,7 +120,7 @@ export function FeatureGrid() {
                   transition={{
                     delay: index * 0.15,
                     duration: 0.8,
-                    ease: [0.19, 1, 0.22, 1]
+                    ease: [0.19, 1, 0.22, 1] as const
                   }}
                 >
                   <motion.div
@@ -175,7 +175,7 @@ export function FeatureGrid() {
                   transition={{
                     delay: index * 0.15 + 0.1,
                     duration: 0.8,
-                    ease: [0.19, 1, 0.22, 1]
+                    ease: [0.19, 1, 0.22, 1] as const
                   }}
                 >
                   <motion.div

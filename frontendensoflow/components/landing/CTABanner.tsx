@@ -67,7 +67,7 @@ export function CTABanner() {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ delay: 0.2, duration: 1, ease: [0.19, 1, 0.22, 1] }}
+          transition={{ delay: 0.2, duration: 1, ease: [0.19, 1, 0.22, 1] as const }}
         >
           Build the
           <br />
