@@ -3,6 +3,8 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Play, Maximize2, Terminal, Workflow } from "lucide-react";
+import { BeamCollision } from "./BeamCollision";
+import { LiquidBeamBackground } from "./LiquidBeamBackground";
 
 export function Demo() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -20,56 +22,11 @@ export function Demo() {
       ref={containerRef}
       className="relative py-32 md:py-40 px-4 overflow-hidden bg-gradient-to-b from-[#0A0A0C] via-[#0D0D10] to-[#0A0A0C]"
     >
-      {/* Violet glow pool */}
-      <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none">
-        {/* Main pool glow */}
-        <motion.div
-          className="absolute w-[800px] h-[600px]"
-          animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.4, 0.6, 0.4],
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-br from-[#5C5CF0] via-[#7B7BFF] to-[#A076FF] opacity-30 blur-[120px]" />
-        </motion.div>
+      {/* Liquid beam continues from above */}
+      <LiquidBeamBackground variant="pre-collision" opacity={0.7} />
 
-        {/* Secondary glow (wider, softer) */}
-        <motion.div
-          className="absolute w-[1000px] h-[700px]"
-          animate={{
-            scale: [1, 1.15, 1],
-            opacity: [0.2, 0.4, 0.2],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-br from-[#3F00FF] via-[#5C5CF0] to-transparent opacity-20 blur-[150px]" />
-        </motion.div>
-
-        {/* Water reflection effect at bottom */}
-        <motion.div
-          className="absolute bottom-0 left-0 right-0 h-[300px]"
-          animate={{
-            opacity: [0.1, 0.2, 0.1],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-t from-[#5C5CF0]/20 via-[#7B7BFF]/10 to-transparent blur-[80px]" />
-        </motion.div>
-      </div>
+      {/* BEAM COLLISION EFFECT - The dramatic centerpiece */}
+      <BeamCollision />
 
       <motion.div
         style={{ opacity, y, scale }}

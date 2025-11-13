@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform, useMotionValue, useSpring } from "fram
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { LiquidBeamBackground } from "./LiquidBeamBackground";
 
 export function Hero() {
   const containerRef = useRef<HTMLElement>(null);
@@ -13,30 +14,8 @@ export function Hero() {
   });
 
   // Parallax transforms
-  const beamY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
-  const beamOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
-  // Mouse parallax
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const smoothMouseX = useSpring(mouseX, { stiffness: 50, damping: 20 });
-  const smoothMouseY = useSpring(mouseY, { stiffness: 50, damping: 20 });
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      const { innerWidth, innerHeight } = window;
-      mouseX.set((clientX - innerWidth / 2) / innerWidth);
-      mouseY.set((clientY - innerHeight / 2) / innerHeight);
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [mouseX, mouseY]);
-
-  const beamRotateX = useTransform(smoothMouseY, [-0.5, 0.5], [2, -2]);
-  const beamRotateY = useTransform(smoothMouseX, [-0.5, 0.5], [-2, 2]);
 
   // Staggered text animation
   const containerVariants = {
@@ -73,46 +52,8 @@ export function Hero() {
         <div className="absolute inset-0 bg-noise animate-grain" />
       </div>
 
-      {/* Beam layers - multiple for depth */}
-      <motion.div
-        className="absolute inset-0 flex items-center justify-center perspective-1000"
-        style={{
-          y: beamY,
-          opacity: beamOpacity,
-          rotateX: beamRotateX,
-          rotateY: beamRotateY,
-        }}
-      >
-        {/* Primary beam */}
-        <motion.div
-          className="absolute w-[clamp(250px,35vw,500px)] h-[120%] top-[-10%]"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 2, ease: "easeOut" }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-[#5C5CF0] via-[#7B7BFF] to-[#C8AFFF] opacity-50 blur-[100px] animate-beamPulse" />
-        </motion.div>
-
-        {/* Secondary beam (wider, softer) */}
-        <motion.div
-          className="absolute w-[clamp(350px,45vw,650px)] h-[110%] top-[-5%]"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 2.5, delay: 0.2, ease: "easeOut" }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-[#3F00FF] via-[#5C5CF0] to-transparent opacity-30 blur-[120px] animate-beamPulseSecondary" />
-        </motion.div>
-
-        {/* Accent glow (center) */}
-        <motion.div
-          className="absolute w-[clamp(150px,20vw,300px)] h-[80%] top-[10%]"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 3, delay: 0.5, ease: "easeOut" }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-[#8888FF] to-transparent opacity-60 blur-[60px] animate-beamPulseTertiary" />
-        </motion.div>
-      </motion.div>
+      {/* Liquid Light Waterfall Beam */}
+      <LiquidBeamBackground variant="hero" opacity={1} />
 
       {/* Radial texture overlay */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.05)_0%,transparent_60%)] pointer-events-none z-10" />
@@ -148,10 +89,10 @@ export function Hero() {
           className="font-black text-[clamp(2.5rem,6vw,6rem)] leading-[0.95] tracking-tight mb-6 text-white"
           variants={itemVariants}
         >
-          Deploy in Seconds
+          Everything App
           <br />
-          <span className="bg-gradient-to-r from-[#5C5CF0] via-[#A076FF] to-[#FF9A5A] bg-clip-text text-transparent">
-            Scale to Millions
+          <span className="bg-gradient-to-r from-[#5141FF] via-[#C0A8FF] to-[#FF9A5A] bg-clip-text text-transparent">
+            for your teams
           </span>
         </motion.h1>
 
@@ -160,8 +101,8 @@ export function Hero() {
           className="text-[1.125rem] leading-relaxed text-[#B0B0C0] mb-10 max-w-xl"
           variants={itemVariants}
         >
-          The visual deployment platform that makes infrastructure feel like magic.
-          From localhost to production in 60 seconds—no DevOps degree required.
+          The visual platform where infrastructure flows like liquid light.
+          Build, deploy, and scale with the beauty of simplicity.
         </motion.p>
 
         {/* CTA Button */}
@@ -241,39 +182,6 @@ export function Hero() {
       </motion.div>
 
       <style jsx>{`
-        @keyframes beamPulse {
-          0%, 100% {
-            opacity: 0.5;
-            transform: scaleY(1) scaleX(1);
-          }
-          50% {
-            opacity: 0.7;
-            transform: scaleY(1.05) scaleX(1.02);
-          }
-        }
-
-        @keyframes beamPulseSecondary {
-          0%, 100% {
-            opacity: 0.3;
-            transform: scaleY(1) scaleX(1);
-          }
-          50% {
-            opacity: 0.5;
-            transform: scaleY(1.03) scaleX(1.01);
-          }
-        }
-
-        @keyframes beamPulseTertiary {
-          0%, 100% {
-            opacity: 0.6;
-            transform: scale(1);
-          }
-          50% {
-            opacity: 0.8;
-            transform: scale(1.1);
-          }
-        }
-
         @keyframes grain {
           0%, 100% { transform: translate(0, 0); }
           10% { transform: translate(-5%, -10%); }
@@ -287,20 +195,6 @@ export function Hero() {
           90% { transform: translate(-10%, 10%); }
         }
 
-        .animate-beamPulse {
-          animation: beamPulse 8s ease-in-out infinite;
-        }
-
-        .animate-beamPulseSecondary {
-          animation: beamPulseSecondary 10s ease-in-out infinite;
-          animation-delay: 1s;
-        }
-
-        .animate-beamPulseTertiary {
-          animation: beamPulseTertiary 6s ease-in-out infinite;
-          animation-delay: 0.5s;
-        }
-
         .animate-grain {
           animation: grain 8s steps(10) infinite;
           background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
@@ -312,15 +206,7 @@ export function Hero() {
           background-size: 200px 200px;
         }
 
-        .perspective-1000 {
-          perspective: 1000px;
-          transform-style: preserve-3d;
-        }
-
         @media (prefers-reduced-motion: reduce) {
-          .animate-beamPulse,
-          .animate-beamPulseSecondary,
-          .animate-beamPulseTertiary,
           .animate-grain {
             animation: none;
           }
