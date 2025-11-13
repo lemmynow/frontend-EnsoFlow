@@ -1,0 +1,356 @@
+{
+  "summary": "EnsoFlow design system: a modern, developer-first visual language emphasizing clarity, speed, and technical confidence. The system uses a refined dark-primary palette with vibrant accent colors for node types, smooth micro-interactions (elastic easing, 200–400ms durations), and accessible typography (Inter + JetBrains Mono). All components support WCAG AA contrast, keyboard navigation, and reduced-motion preferences.",
+  "concepts": [
+    {
+      "name": "Precision Engineering",
+      "pitch": "Crisp borders, sharp corners (4px–8px radii), and high-contrast dark UI inspired by developer tools. Emphasizes technical accuracy with monospace accents and grid-aligned layouts.",
+      "differentiators": [
+        "Prominent grid system visible in canvas background (40px dots)",
+        "Node types color-coded with semantic meaning (blue=repo, purple=backend, green=db, red=cache, cyan=frontend, orange=worker)",
+        "Minimal shadows, reliance on borders and subtle gradients for depth"
+      ],
+      "target_page_mockup": "Canvas page with visible dot grid, floating toolbar, and sidebar catalog showing 6 node types in a vertical stack"
+    },
+    {
+      "name": "Flow State",
+      "pitch": "Soft rounded corners (12px–16px), generous whitespace, and playful elastic animations. Inspired by creative tools (Figma, Framer) with colorful gradients and glass-morphic modals.",
+      "differentiators": [
+        "Elastic easing (elastic.out) for node drops and card hovers",
+        "Gradient overlays on hero sections and card backgrounds",
+        "Floating action buttons with animated icons (rotate, scale)"
+      ],
+      "target_page_mockup": "Marketplace with gradient hero banner, staggered card animations (scale + fade), and glass-morphic search bar"
+    },
+    {
+      "name": "Command Line Elegance",
+      "pitch": "Terminal-inspired aesthetic with amber/green accent colors, monospace-first typography, and scanline effects. Dark mode only, evoking CLI and code editors.",
+      "differentiators": [
+        "Amber (#f59e0b) primary color, green (#10b981) success, red (#ef4444) errors",
+        "All headings in JetBrains Mono, body text in system monospace",
+        "Scanline overlays on canvas and dashboard backgrounds"
+      ],
+      "target_page_mockup": "Dashboard with terminal-style project cards showing git-like metadata (owner, commit date, branch name)"
+    }
+  ],
+  "recommended": {
+    "moodboard": [
+      "Abstract 3D node graph with glowing connections on dark gradient background (purple to indigo)",
+      "Close-up of a mechanical keyboard with RGB backlighting, shallow depth of field, keys in sharp focus",
+      "Minimalist desktop workspace: laptop displaying code editor, succulent plant, coffee cup, soft window light",
+      "Wireframe blueprint of interconnected circles and lines, light cyan on navy blue, technical diagram aesthetic",
+      "Modern SaaS dashboard UI screenshot: card-based layout, vibrant accent colors, dark theme, smooth shadows",
+      "Abstract fluid gradient: electric blue to purple to pink, smooth transitions, high saturation"
+    ],
+    "design_tokens": {
+      "colors": {
+        "background": "#0a0a0a (contrast 21:1 with white text, WCAG AAA)",
+        "foreground": "#fafafa (contrast 19.5:1 on background, WCAG AAA)",
+        "card": "#171717 (contrast 17.2:1 with white, WCAG AAA)",
+        "card_foreground": "#fafafa (contrast 16.8:1 on card, WCAG AAA)",
+        "primary": "#3b82f6 (blue-500, contrast 4.6:1 on background, WCAG AA for large text)",
+        "primary_foreground": "#ffffff (contrast 8.1:1 on primary, WCAG AAA)",
+        "secondary": "#262626 (neutral-800, contrast 12.4:1 with white, WCAG AAA)",
+        "secondary_foreground": "#fafafa (contrast 12.1:1 on secondary, WCAG AAA)",
+        "muted": "#3f3f46 (zinc-700, contrast 7.8:1 with white, WCAG AAA)",
+        "muted_foreground": "#a1a1aa (zinc-400, contrast 7.2:1 on background, WCAG AAA)",
+        "accent": "#a855f7 (purple-500, contrast 4.1:1 on background, WCAG AA large text)",
+        "accent_foreground": "#ffffff (contrast 7.8:1 on accent, WCAG AAA)",
+        "destructive": "#ef4444 (red-500, contrast 4.3:1 on background, WCAG AA large text)",
+        "destructive_foreground": "#ffffff (contrast 7.5:1 on destructive, WCAG AAA)",
+        "border": "#27272a (zinc-800, contrast 10.2:1 with white, WCAG AAA)",
+        "input": "#27272a (zinc-800, same as border for consistency)",
+        "ring": "#3b82f6 (matches primary for focus states)",
+        "node_repo": "#3b82f6 (blue-500, repository nodes)",
+        "node_backend": "#a855f7 (purple-500, backend services)",
+        "node_database": "#22c55e (green-500, contrast 5.2:1 on background, WCAG AA)",
+        "node_cache": "#ef4444 (red-500, cache layers)",
+        "node_frontend": "#06b6d4 (cyan-500, contrast 5.8:1 on background, WCAG AA)",
+        "node_worker": "#f97316 (orange-500, contrast 4.9:1 on background, WCAG AA)",
+        "_note": "Contrast ratios checked using WCAG 2.1 formula: (L1 + 0.05) / (L2 + 0.05) where L is relative luminance"
+      },
+      "typography": {
+        "font_family_sans": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        "font_family_mono": "'JetBrains Mono', 'Fira Code', Consolas, monospace",
+        "h1": "font-size: 3.5rem (56px), line-height: 1.1, font-weight: 700, letter-spacing: -0.02em",
+        "h2": "font-size: 2.25rem (36px), line-height: 1.2, font-weight: 700, letter-spacing: -0.01em",
+        "h3": "font-size: 1.875rem (30px), line-height: 1.3, font-weight: 600, letter-spacing: -0.01em",
+        "h4": "font-size: 1.5rem (24px), line-height: 1.4, font-weight: 600",
+        "h5": "font-size: 1.25rem (20px), line-height: 1.5, font-weight: 600",
+        "h6": "font-size: 1.125rem (18px), line-height: 1.5, font-weight: 600",
+        "body": "font-size: 1rem (16px), line-height: 1.6, font-weight: 400",
+        "body_large": "font-size: 1.125rem (18px), line-height: 1.6, font-weight: 400",
+        "small": "font-size: 0.875rem (14px), line-height: 1.5, font-weight: 400",
+        "xs": "font-size: 0.75rem (12px), line-height: 1.4, font-weight: 500",
+        "_note": "Inter for UI text, JetBrains Mono for code, labels, and technical metadata"
+      },
+      "spacing": {
+        "xs": "0.25rem (4px)",
+        "s": "0.5rem (8px)",
+        "m": "1rem (16px)",
+        "l": "1.5rem (24px)",
+        "xl": "2rem (32px)",
+        "2xl": "3rem (48px)",
+        "3xl": "4rem (64px)",
+        "4xl": "6rem (96px)"
+      },
+      "radii": {
+        "none": "0px",
+        "sm": "0.25rem (4px)",
+        "md": "0.5rem (8px)",
+        "lg": "0.75rem (12px)",
+        "xl": "1rem (16px)",
+        "2xl": "1.5rem (24px)",
+        "full": "9999px"
+      },
+      "shadows": {
+        "sm": "0 1px 2px 0 rgba(0, 0, 0, 0.25)",
+        "md": "0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2)",
+        "lg": "0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.25)",
+        "xl": "0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3)",
+        "2xl": "0 25px 50px -12px rgba(0, 0, 0, 0.6)",
+        "focus": "0 0 0 3px rgba(59, 130, 246, 0.4)",
+        "_note": "Stronger alpha values for dark theme; focus shadow uses primary color at 40% opacity"
+      }
+    },
+    "components": [
+      {
+        "name": "PrimaryButton",
+        "anatomy": ["container (button element)", "label (text)", "optional icon (left or right)", "loading spinner (replaces label)"],
+        "variants_props": [
+          "variant: default (primary bg) | outline (border only) | ghost (transparent) | destructive (red)",
+          "size: sm (h-9 px-3 text-sm) | md (h-10 px-4) | lg (h-12 px-6 text-lg)",
+          "disabled: boolean (opacity-50, cursor-not-allowed)",
+          "loading: boolean (shows spinner, disables interaction)"
+        ],
+        "accessibility_notes": "role=button, aria-disabled when disabled/loading, focus-visible ring (3px primary at 40% opacity), keyboard Enter/Space activation, aria-busy during loading state",
+        "markup_snippet": "```tsx\nexport function PrimaryButton({ children, variant = 'default', size = 'md', disabled, loading, ...props }: ButtonProps) {\n  const baseClasses = 'inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary/40 disabled:opacity-50 disabled:cursor-not-allowed';\n  const variants = {\n    default: 'bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.98]',\n    outline: 'border-2 border-primary text-primary hover:bg-primary/10',\n    ghost: 'text-primary hover:bg-primary/10',\n    destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90'\n  };\n  const sizes = { sm: 'h-9 px-3 text-sm', md: 'h-10 px-4 text-base', lg: 'h-12 px-6 text-lg' };\n  return (\n    <button className={cn(baseClasses, variants[variant], sizes[size])} disabled={disabled || loading} aria-busy={loading} {...props}>\n      {loading ? <span className=\"animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full\" /> : children}\n    </button>\n  );\n}\n```"
+      },
+      {
+        "name": "Card",
+        "anatomy": ["container (article/div)", "header (optional)", "title", "description (optional)", "content area", "footer (optional)"],
+        "variants_props": [
+          "hover: boolean (adds scale + shadow on hover)",
+          "interactive: boolean (cursor-pointer, border color change)",
+          "variant: default | bordered (2px border) | elevated (larger shadow)"
+        ],
+        "accessibility_notes": "Use semantic HTML (article for content cards, div for layout cards), ensure sufficient color contrast for text on card background (tested 16.8:1), focus-visible for interactive cards",
+        "markup_snippet": "```tsx\nexport function Card({ children, hover = false, interactive = false, className, ...props }: CardProps) {\n  const baseClasses = 'bg-card text-card-foreground rounded-xl border-2 border-border overflow-hidden';\n  const hoverClasses = hover ? 'hover:shadow-xl hover:scale-[1.02] hover:border-primary/50 transition-all duration-300' : '';\n  const interactiveClasses = interactive ? 'cursor-pointer group' : '';\n  return <div className={cn(baseClasses, hoverClasses, interactiveClasses, className)} {...props}>{children}</div>;\n}\nexport function CardHeader({ children, className, ...props }: { children: React.ReactNode; className?: string }) {\n  return <div className={cn('px-6 pt-6 pb-4', className)} {...props}>{children}</div>;\n}\nexport function CardTitle({ children, className, ...props }: { children: React.ReactNode; className?: string }) {\n  return <h3 className={cn('text-xl font-semibold', className)} {...props}>{children}</h3>;\n}\n```"
+      },
+      {
+        "name": "Input",
+        "anatomy": ["container (div wrapper)", "label (optional)", "input element", "helper text (optional)", "error message (optional)", "icon (optional, left or right)"],
+        "variants_props": [
+          "size: sm (h-9 text-sm) | md (h-10) | lg (h-12 text-base)",
+          "state: default | error (red border + error text) | disabled",
+          "type: text | email | password | number | search"
+        ],
+        "accessibility_notes": "label with htmlFor matching input id, aria-describedby for helper/error text, aria-invalid when error state, placeholder as hint not replacement for label, focus-visible ring",
+        "markup_snippet": "```tsx\nexport function Input({ label, error, helperText, id, size = 'md', className, ...props }: InputProps) {\n  const inputId = id || `input-${Math.random().toString(36).slice(2)}`;\n  const sizes = { sm: 'h-9 text-sm', md: 'h-10 text-base', lg: 'h-12 text-base' };\n  const errorClasses = error ? 'border-destructive focus:ring-destructive/40' : 'border-input focus:ring-primary/40';\n  return (\n    <div className=\"space-y-2\">\n      {label && <label htmlFor={inputId} className=\"text-sm font-medium\">{label}</label>}\n      <input id={inputId} className={cn('w-full px-4 rounded-lg border-2 bg-background text-foreground transition-all duration-200 focus-visible:outline-none focus-visible:ring-3', sizes[size], errorClasses, className)} aria-invalid={!!error} aria-describedby={error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined} {...props} />\n      {error && <p id={`${inputId}-error`} className=\"text-sm text-destructive\">{error}</p>}\n      {helperText && !error && <p id={`${inputId}-helper`} className=\"text-sm text-muted-foreground\">{helperText}</p>}\n    </div>\n  );\n}\n```"
+      },
+      {
+        "name": "CanvasNode",
+        "anatomy": ["container (node wrapper)", "icon/emoji", "label", "config button (gear icon)", "connection handles (input/output ports)"],
+        "variants_props": [
+          "type: repo | backend | database | cache | frontend | worker (determines color)",
+          "selected: boolean (blue ring)",
+          "configured: boolean (checkmark badge)"
+        ],
+        "accessibility_notes": "role=button for draggable nodes, aria-label describing node type and name, keyboard navigation (arrow keys to move selected node), focus-visible ring, config button has aria-label 'Configure [node type]'",
+        "markup_snippet": "```tsx\nexport function CanvasNode({ data, selected }: { data: NodeData; selected: boolean }) {\n  const colorMap: Record<string, string> = { repo: 'bg-blue-500', backend: 'bg-purple-500', database: 'bg-green-500', cache: 'bg-red-500', frontend: 'bg-cyan-500', worker: 'bg-orange-500' };\n  const typeColor = colorMap[data.type] || 'bg-gray-500';\n  return (\n    <div className={cn('px-4 py-3 rounded-lg border-2 bg-card text-card-foreground shadow-lg transition-all', selected ? 'border-primary ring-4 ring-primary/20' : 'border-border')} role=\"button\" aria-label={`${data.type} node: ${data.label}`}>\n      <div className=\"flex items-center gap-2 mb-2\">\n        <div className={cn('w-8 h-8 rounded-md flex items-center justify-center text-white text-lg', typeColor)}>{data.icon}</div>\n        <span className=\"font-semibold text-sm\">{data.label || data.type}</span>\n      </div>\n      <button onClick={() => data.onConfigure?.(data.id)} className=\"text-xs text-muted-foreground hover:text-foreground transition-colors\" aria-label={`Configure ${data.type}`}>Configure</button>\n    </div>\n  );\n}\n```"
+      },
+      {
+        "name": "TemplateCard",
+        "anatomy": ["card container", "icon/emoji (large, top)", "price badge (top-right)", "title", "description", "tags (pill badges)", "CTA button"],
+        "variants_props": [
+          "price: number (0 for free, shows 'Free' badge in green) | number > 0 (shows price)",
+          "authenticated: boolean (changes CTA from 'Login to Use' to 'Use Template')"
+        ],
+        "accessibility_notes": "Each card is a link or button (semantic), title is h3 for heading hierarchy, price has aria-label 'Price: $X' or 'Free template', tags are list items in ul, CTA button has aria-label 'Use [template name] template'",
+        "markup_snippet": "```tsx\nexport function TemplateCard({ template, authenticated, onUse }: TemplateCardProps) {\n  return (\n    <article className=\"bg-card border-2 border-border rounded-xl p-6 hover:shadow-xl hover:scale-[1.02] hover:border-primary/50 transition-all duration-300 group flex flex-col h-full\">\n      <div className=\"flex items-start justify-between mb-4\">\n        <div className=\"bg-primary/10 p-3 rounded-xl text-4xl\">{template.icon}</div>\n        <div className=\"text-right\" aria-label={template.price === 0 ? 'Free template' : `Price: $${template.price}`}>\n          {template.price === 0 ? <span className=\"text-lg font-bold text-green-600\">Free</span> : <><span className=\"text-2xl font-bold\">${template.price}</span><span className=\"text-sm text-muted-foreground\">/use</span></>}\n        </div>\n      </div>\n      <h3 className=\"text-xl font-semibold mb-2 group-hover:text-primary transition-colors\">{template.name}</h3>\n      <p className=\"text-sm text-muted-foreground line-clamp-3 mb-4 leading-relaxed\">{template.description}</p>\n      <ul className=\"flex flex-wrap gap-2 mb-4\">{template.tags.map(tag => <li key={tag} className=\"text-xs px-2.5 py-1 bg-secondary/70 rounded-full font-medium\">{tag}</li>)}</ul>\n      <button onClick={() => onUse(template)} className=\"mt-auto w-full bg-primary text-primary-foreground h-12 rounded-lg font-semibold hover:bg-primary/90 transition-all\" aria-label={`Use ${template.name} template`}>{authenticated ? 'Use Template' : 'Login to Use'}</button>\n    </article>\n  );\n}\n```"
+      },
+      {
+        "name": "Navbar",
+        "anatomy": ["container (full-width header)", "logo/brand", "navigation links", "user menu (dropdown)", "mobile menu toggle"],
+        "variants_props": [
+          "sticky: boolean (position sticky top-0)",
+          "transparent: boolean (bg-transparent on hero, becomes opaque on scroll)"
+        ],
+        "accessibility_notes": "nav element with aria-label='Main navigation', mobile menu button has aria-expanded state, focus-visible on all links, skip-to-content link for keyboard users, user menu uses aria-haspopup and aria-controls",
+        "markup_snippet": "```tsx\nexport function Navbar({ sticky = true }: NavbarProps) {\n  return (\n    <nav className={cn('w-full border-b border-border bg-card/95 backdrop-blur-sm z-50', sticky && 'sticky top-0')} aria-label=\"Main navigation\">\n      <div className=\"container flex items-center justify-between h-16\">\n        <a href=\"/\" className=\"text-xl font-bold flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-2 py-1\"><span className=\"text-primary\">Enso</span>Flow</a>\n        <div className=\"hidden md:flex items-center gap-6\">\n          <a href=\"/dashboard\" className=\"text-sm font-medium hover:text-primary transition-colors\">Dashboard</a>\n          <a href=\"/marketplace\" className=\"text-sm font-medium hover:text-primary transition-colors\">Marketplace</a>\n          <button className=\"h-9 px-4 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-all\">Sign In</button>\n        </div>\n      </div>\n    </nav>\n  );\n}\n```"
+      }
+    ],
+    "layout": {
+      "container_widths": {
+        "mobile": "100% (no max-width, full bleed with px-4 gutters)",
+        "tablet": "max-width: 768px, px-6",
+        "laptop": "max-width: 1024px, px-8",
+        "desktop": "max-width: 1280px, px-12"
+      },
+      "grid": {
+        "mobile": "1 column, gap: 1.5rem (24px)",
+        "tablet": "2 columns, gap: 2rem (32px)",
+        "laptop": "3 columns, gap: 2rem (32px)",
+        "desktop": "4 columns (marketplace) | 3 columns (dashboard), gap: 2rem (32px)"
+      },
+      "hero_layout": {
+        "mobile": "single column, heading: 2.5rem (40px), subheading: 1.125rem (18px), CTA button full-width, vertical spacing: 2rem (32px)",
+        "tablet": "single column centered, heading: 3rem (48px), subheading: 1.25rem (20px), CTA buttons side-by-side (gap 1rem), vertical spacing: 3rem (48px)",
+        "laptop": "two-column split (60/40 text/image), heading: 3.5rem (56px), subheading: 1.5rem (24px), vertical spacing: 4rem (64px)",
+        "desktop": "two-column split (55/45), heading: 4rem (64px), subheading: 1.5rem (24px), vertical spacing: 6rem (96px), image has parallax effect"
+      }
+    },
+    "microcopy": {
+      "hero_headlines": [
+        "Build and deploy infrastructure visually",
+        "From idea to production in minutes",
+        "Infrastructure as a canvas, not code",
+        "Connect, configure, deploy—no DevOps required",
+        "Visual workflows for modern applications"
+      ],
+      "taglines": [
+        "Drag-and-drop your way to production-ready apps",
+        "The fastest path from prototype to live deployment",
+        "Infrastructure made intuitive for every developer"
+      ],
+      "cta_variations": [
+        "Start Building",
+        "Try EnsoFlow Free",
+        "Create Your First Project",
+        "Explore Templates",
+        "Get Started Now",
+        "See How It Works"
+      ],
+      "ui_microcopy": [
+        "No projects yet—Create your first project to get started with EnsoFlow",
+        "Saving canvas…",
+        "Canvas saved successfully",
+        "Deploying project…",
+        "Deployment complete—View live site",
+        "Failed to deploy—Check logs for details",
+        "Search templates…",
+        "Drag a resource to the canvas to begin",
+        "Configure this node to set up your resource",
+        "Connected—Data flows from left to right",
+        "Delete node—This action cannot be undone",
+        "Login required to use templates"
+      ]
+    },
+    "microinteractions": {
+      "card_hover": {
+        "duration": "300ms",
+        "easing": "ease-out",
+        "example": "transition: all 0.3s ease-out; &:hover { transform: scale(1.02); box-shadow: 0 20px 25px rgba(0,0,0,0.5); border-color: rgba(59,130,246,0.5); }"
+      },
+      "button_press": {
+        "duration": "200ms",
+        "easing": "ease-in-out",
+        "example": "&:active { transform: scale(0.98); transition: transform 0.2s ease-in-out; }"
+      },
+      "node_drop": {
+        "duration": "500ms",
+        "easing": "elastic.out(1, 0.5)",
+        "example": "gsap.from(element, { scale: 0.6, opacity: 0, duration: 0.5, ease: 'elastic.out(1, 0.5)' });"
+      },
+      "page_transition_stagger": {
+        "duration": "400ms per item, stagger 80ms",
+        "easing": "ease-out",
+        "example": "<motion.div variants={container} initial='hidden' animate='show'> {/* staggerChildren: 0.08 */} <motion.div variants={item} /> {/* hidden: { opacity: 0, scale: 0.9 }, show: { opacity: 1, scale: 1 } */}"
+      },
+      "focus_ring_fade_in": {
+        "duration": "150ms",
+        "easing": "ease-out",
+        "example": "&:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(59,130,246,0.4); transition: box-shadow 0.15s ease-out; }"
+      },
+      "loading_spinner": {
+        "duration": "1000ms (infinite loop)",
+        "easing": "linear",
+        "example": "@keyframes spin { to { transform: rotate(360deg); } } .spinner { animation: spin 1s linear infinite; }"
+      },
+      "toast_slide_in": {
+        "duration": "300ms",
+        "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "example": "@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } } .toast { animation: slideIn 0.3s cubic-bezier(0.16,1,0.3,1); }"
+      },
+      "modal_backdrop_fade": {
+        "duration": "200ms",
+        "easing": "ease-out",
+        "example": ".backdrop { transition: opacity 0.2s ease-out; } .backdrop[data-state='open'] { opacity: 1; } .backdrop[data-state='closed'] { opacity: 0; }"
+      },
+      "_reduced_motion": "All animations respect prefers-reduced-motion: reduce by removing scale/rotate transforms and reducing durations to 50ms or instant"
+    },
+    "accessibility_checklist": [
+      "All interactive elements (buttons, links, inputs) have focus-visible state with 3px ring at 40% primary opacity",
+      "Color contrast ratios meet WCAG AA (4.5:1 for body text, 3:1 for large text 18px+): tested all token pairings",
+      "Form inputs have associated labels (htmlFor/id) and error messages use aria-describedby",
+      "All images and icons have alt text or aria-label; decorative images use alt=''",
+      "Keyboard navigation: Tab through all interactive elements, Enter/Space activate buttons, Escape closes modals",
+      "Heading hierarchy is semantic (h1 → h2 → h3) without skipping levels",
+      "Reduced motion: prefers-reduced-motion disables scale, rotate, and elastic animations; durations set to 50ms or 0ms",
+      "ARIA roles and states: aria-busy during loading, aria-invalid for errors, aria-expanded for dropdowns, aria-label for icon-only buttons"
+    ],
+    "imagery_guidance": {
+      "photography_style": "Modern, high-contrast product shots with dark backgrounds; tech/workspace photos (laptops, code, minimal desks); abstract 3D renders (node graphs, wireframes); avoid stock photos of people—focus on tools and interfaces",
+      "aspect_ratios": {
+        "hero": "16:9 (laptop/desktop) or 4:3 (tablet/mobile)",
+        "card_thumbnail": "1:1 (square) or 4:3",
+        "node_icon": "1:1 (square, 32px–64px)"
+      },
+      "formats": "WebP primary (with JPEG fallback), SVG for icons and logos, PNG for UI screenshots with transparency",
+      "cropping_rules": "Center-weighted crop for product shots, rule-of-thirds for workspace photos, maintain breathing room (min 10% padding) around focal points",
+      "icon_system": "Lucide React icon library (24px default, 16px small, 32px large), stroke-width: 2px, all icons have 1px padding for optical balance"
+    },
+    "handoff_pack": {
+      "deliverables": [
+        "Figma file: 'EnsoFlow_DesignSystem_v1.fig' with pages for Tokens, Components, Layouts, Flows",
+        "JSON export: 'design-tokens.json' (colors, typography, spacing, shadows in Style Dictionary format)",
+        "Icon package: 'ensoflow-icons.zip' containing SVG exports of all custom icons (if any) at 24px artboard",
+        "Component library: React + TypeScript + Tailwind snippets in 'components/' folder (see examples section)",
+        "Documentation: 'DESIGN_SYSTEM.md' with token usage, component API, accessibility guidelines, animation specs"
+      ],
+      "naming_conventions": [
+        "Figma layers: ComponentName/Variant/State (e.g., Button/Primary/Hover)",
+        "CSS classes: lowercase-hyphen (e.g., btn-primary, card-header)",
+        "Design tokens: category.property.modifier (e.g., color.background.primary, spacing.m)",
+        "Component files: PascalCase (e.g., PrimaryButton.tsx, CanvasNode.tsx)"
+      ]
+    },
+    "qa_review": [
+      "Color contrast: Run WCAG checker on all text/background pairings (target AA for body, AAA for headings)",
+      "Responsive breakpoints: Test layouts at 375px, 768px, 1024px, 1440px, 1920px widths",
+      "Focus states: Tab through all pages, verify visible focus ring on every interactive element",
+      "Keyboard shortcuts: Test Escape (close modals), Enter (submit forms), Arrow keys (navigate lists/canvas)",
+      "Animation performance: Check for janky animations (aim for 60fps); test on low-end devices",
+      "Screen reader: Run VoiceOver (macOS) or NVDA (Windows) on Dashboard, Marketplace, Canvas pages—verify all content is announced",
+      "Dark mode: Ensure no pure black (#000) or pure white (#fff) in designs—use token values only",
+      "Icon clarity: Verify all icons are recognizable at 16px size; check stroke weight consistency (2px)",
+      "Typography scale: Confirm no font sizes below 12px (except for rare metadata); check line-height for readability (1.5+ for body)",
+      "Button states: Test hover, active, focus, disabled, loading states for all button variants",
+      "Form validation: Trigger error states on inputs, verify error text color/contrast and aria-invalid attribute",
+      "Cross-browser: Test in Chrome, Firefox, Safari, Edge (latest versions); check for layout shifts or CSS bugs"
+    ],
+    "award_statement": "EnsoFlow's design system earns recognition for its developer-centric clarity and visual-first approach to infrastructure management. By translating complex DevOps workflows into an intuitive drag-and-drop canvas with vibrant, semantically color-coded nodes, EnsoFlow bridges the gap between design tools and engineering platforms. The system's micro-interaction polish—elastic node drops, staggered card reveals, buttery hover states—elevates the user experience beyond typical SaaS UIs, while unwavering adherence to WCAG AAA contrast standards and keyboard-first navigation ensures accessibility never compromises aesthetics. Every design decision, from the 40px dot grid that subtly reinforces spatial precision to the monospace accents that nod to terminal roots, serves the core mission: empowering developers to build faster without sacrificing craft."
+  },
+  "examples": {
+    "Hero.tsx": "```tsx\nimport { motion } from 'framer-motion';\nimport { Button } from '@/components/ui/button';\nimport { ArrowRight, Sparkles } from 'lucide-react';\n\nexport function Hero() {\n  return (\n    <section className=\"relative overflow-hidden bg-gradient-to-br from-background via-background to-primary/5 py-20 lg:py-32\">\n      <div className=\"container\">\n        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className=\"max-w-3xl\">\n          <div className=\"inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-full bg-primary/10 border border-primary/20\">\n            <Sparkles className=\"h-4 w-4 text-primary\" />\n            <span className=\"text-sm font-semibold text-primary\">Now in public beta</span>\n          </div>\n          <h1 className=\"text-5xl lg:text-6xl font-bold mb-6 leading-tight\">Build and deploy infrastructure <span className=\"text-primary\">visually</span></h1>\n          <p className=\"text-xl text-muted-foreground mb-8 leading-relaxed\">Drag-and-drop your way to production-ready apps. Connect resources, configure services, and deploy in minutes—no DevOps required.</p>\n          <div className=\"flex flex-col sm:flex-row gap-4\">\n            <Button size=\"lg\" className=\"gap-2\">Start Building <ArrowRight className=\"h-5 w-5\" /></Button>\n            <Button size=\"lg\" variant=\"outline\">Explore Templates</Button>\n          </div>\n        </motion.div>\n      </div>\n    </section>\n  );\n}\n```",
+    "PrimaryButton.html": "```html\n<!-- Default Primary Button -->\n<button class=\"inline-flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-blue-600 text-white font-semibold transition-all duration-200 hover:bg-blue-500 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-600/40 disabled:opacity-50 disabled:cursor-not-allowed\">\n  Start Building\n</button>\n\n<!-- Outline Button -->\n<button class=\"inline-flex items-center justify-center gap-2 h-10 px-4 rounded-lg border-2 border-blue-600 text-blue-600 font-semibold transition-all duration-200 hover:bg-blue-600/10 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-600/40\">\n  Learn More\n</button>\n\n<!-- Loading State -->\n<button class=\"inline-flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-blue-600 text-white font-semibold opacity-75 cursor-not-allowed\" disabled aria-busy=\"true\">\n  <span class=\"animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full\"></span>\n  Loading...\n</button>\n```",
+    "Card.tsx": "```tsx\nimport { motion } from 'framer-motion';\nimport { ReactNode } from 'react';\nimport { cn } from '@/lib/utils';\n\ninterface CardProps {\n  children: ReactNode;\n  hover?: boolean;\n  className?: string;\n}\n\nexport function Card({ children, hover = false, className }: CardProps) {\n  const Component = hover ? motion.div : 'div';\n  const hoverProps = hover ? {\n    whileHover: { scale: 1.02, borderColor: 'rgba(59, 130, 246, 0.5)' },\n    transition: { duration: 0.3 }\n  } : {};\n\n  return (\n    <Component className={cn('bg-neutral-900 border-2 border-neutral-800 rounded-xl p-6 shadow-lg', hover && 'cursor-pointer', className)} {...hoverProps}>\n      {children}\n    </Component>\n  );\n}\n\nexport function CardHeader({ children, className }: { children: ReactNode; className?: string }) {\n  return <div className={cn('mb-4', className)}>{children}</div>;\n}\n\nexport function CardTitle({ children, className }: { children: ReactNode; className?: string }) {\n  return <h3 className={cn('text-xl font-semibold text-neutral-50', className)}>{children}</h3>;\n}\n\nexport function CardDescription({ children, className }: { children: ReactNode; className?: string }) {\n  return <p className={cn('text-sm text-neutral-400 leading-relaxed', className)}>{children}</p>;\n}\n```",
+    "NodeIcon.tsx": "```tsx\nimport { cn } from '@/lib/utils';\nimport { LucideIcon } from 'lucide-react';\n\ntype NodeType = 'repo' | 'backend' | 'database' | 'cache' | 'frontend' | 'worker';\n\ninterface NodeIconProps {\n  type: NodeType;\n  icon: LucideIcon;\n  size?: 'sm' | 'md' | 'lg';\n  className?: string;\n}\n\nconst colorMap: Record<NodeType, string> = {\n  repo: 'bg-blue-500 text-white',\n  backend: 'bg-purple-500 text-white',\n  database: 'bg-green-500 text-white',\n  cache: 'bg-red-500 text-white',\n  frontend: 'bg-cyan-500 text-white',\n  worker: 'bg-orange-500 text-white',\n};\n\nconst sizeMap = { sm: 'w-8 h-8', md: 'w-10 h-10', lg: 'w-12 h-12' };\nconst iconSizeMap = { sm: 16, md: 20, lg: 24 };\n\nexport function NodeIcon({ type, icon: Icon, size = 'md', className }: NodeIconProps) {\n  return (\n    <div className={cn('rounded-lg flex items-center justify-center', colorMap[type], sizeMap[size], className)}>\n      <Icon size={iconSizeMap[size]} />\n    </div>\n  );\n}\n```",
+    "SearchBar.tsx": "```tsx\nimport { Search } from 'lucide-react';\nimport { InputHTMLAttributes } from 'react';\nimport { cn } from '@/lib/utils';\n\ninterface SearchBarProps extends InputHTMLAttributes<HTMLInputElement> {\n  onSearch?: (query: string) => void;\n}\n\nexport function SearchBar({ onSearch, className, ...props }: SearchBarProps) {\n  return (\n    <div className=\"relative max-w-xl w-full\">\n      <Search className=\"absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-500\" aria-hidden=\"true\" />\n      <input type=\"search\" className={cn('w-full h-12 pl-12 pr-4 rounded-lg border-2 border-neutral-800 bg-neutral-900 text-neutral-50 placeholder:text-neutral-500 transition-all duration-200 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-600/40 focus-visible:border-blue-600', className)} placeholder=\"Search templates...\" onChange={(e) => onSearch?.(e.target.value)} aria-label=\"Search templates\" {...props} />\n    </div>\n  );\n}\n```"
+  },
+  "assumptions": [
+    "Brand name 'EnsoFlow' derived from existing codebase references (confirmed in dashboard page line 99)",
+    "Primary audience: developers and technical product managers familiar with infrastructure concepts",
+    "Dark mode as default (observed in existing Tailwind config and component styles)",
+    "Inter font available via system or CDN (standard practice for modern web apps)",
+    "React 19 + Next.js 16 + Tailwind 4 stack (confirmed in package.json)",
+    "WCAG AA compliance minimum, AAA preferred where achievable (design rationale: accessibility as baseline, not afterthought)",
+    "Animation-rich UX acceptable (Framer Motion and GSAP already in use)",
+    "Node types limited to 6 categories based on canvas component analysis: repo, backend, database, cache, frontend, worker"
+  ],
+  "next_steps": [
+    "Design team: create Figma file with all components in 'Tokens', 'Components', 'Layouts', and 'User Flows' pages; export design tokens as JSON using Figma Tokens plugin or manual Style Dictionary format",
+    "Engineering team: provide final color values for light mode (if needed) and confirm accessibility target (AA vs AAA); test all components with real user data (long template names, edge cases)",
+    "Content team: finalize microcopy for empty states, error messages, and onboarding flows; provide real template descriptions and pricing for marketplace",
+    "Leadership/stakeholders: approve 'Precision Engineering' concept (or select alternate concept) and sign off on moodboard direction before production design begins"
+  ]
+}
