@@ -164,7 +164,7 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
     [reactFlowInstance, setNodes, handleConfigureNode]
   );
 
-  const handleSaveNodeConfig = (config: Record<string, unknown>) => {
+  const handleSaveNodeConfig = useCallback((config: Record<string, unknown>) => {
     if (!selectedNode) return;
 
     setNodes((nds) =>
