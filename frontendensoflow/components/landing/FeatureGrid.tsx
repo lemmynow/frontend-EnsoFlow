@@ -57,10 +57,6 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: {
-      duration: 0.6,
-      ease: "easeOut",
-    },
   },
 };
 
@@ -99,6 +95,7 @@ export function FeatureGrid() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, ease: [0, 0, 0.2, 1] }}
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {features.map((feature, index) => {

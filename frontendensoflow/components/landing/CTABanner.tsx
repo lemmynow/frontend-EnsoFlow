@@ -19,7 +19,7 @@ export function CTABanner() {
             transition={{
               duration: 4,
               repeat: Infinity,
-              ease: "easeInOut",
+              ease: [0.4, 0, 0.2, 1],
             }}
             className="absolute inset-0 bg-gradient-to-br from-primary to-secondary opacity-20 rounded-3xl blur-2xl"
           />
