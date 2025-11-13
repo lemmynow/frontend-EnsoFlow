@@ -5,7 +5,7 @@ import { Handle, Position, type NodeProps } from "@xyflow/react";
 import { Database, Server, Globe, Cpu, Code, Zap } from "lucide-react";
 import { Card } from "../ui/card";
 
-const iconMap: Record<string, React.ElementType> = {
+const iconMap: Record<string, typeof Code> = {
   repo: Code,
   backend: Server,
   database: Database,

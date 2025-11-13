@@ -1,16 +1,25 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, Suspense } from "react";
+import dynamic from "next/dynamic";
+
+// Dynamically import the WebGL canvas to avoid SSR issues
+const LiquidLightCanvas = dynamic(
+  () => import("./LiquidLightCanvas").then((mod) => mod.LiquidLightCanvas),
+  { ssr: false }
+);
 
 interface LiquidBeamBackgroundProps {
   variant?: "hero" | "features" | "pre-collision" | "post-collision";
   opacity?: number;
+  useShader?: boolean; // Toggle between WebGL shader and CSS fallback
 }
 
 export function LiquidBeamBackground({
   variant = "hero",
-  opacity = 1
+  opacity = 1,
+  useShader = true
 }: LiquidBeamBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -25,6 +34,34 @@ export function LiquidBeamBackground({
     [0, 0.3, 0.7, 1],
     [opacity, opacity * 0.8, opacity * 0.5, opacity * 0.2]
   );
+
+  // If WebGL shader is enabled, use it
+  if (useShader) {
+    return (
+      <div ref={containerRef} className="absolute inset-0 overflow-hidden pointer-events-none">
+        <Suspense fallback={<CSSFallback variant={variant} opacity={opacity} beamY={beamY} beamOpacity={beamOpacity} />}>
+          <LiquidLightCanvas variant={variant} opacity={opacity} />
+        </Suspense>
+      </div>
+    );
+  }
+
+  // CSS fallback for older devices or when shader is disabled
+  return <CSSFallback variant={variant} opacity={opacity} beamY={beamY} beamOpacity={beamOpacity} />;
+}
+
+// CSS-based fallback component (original implementation)
+function CSSFallback({
+  variant,
+  opacity,
+  beamY,
+  beamOpacity
+}: {
+  variant: "hero" | "features" | "pre-collision" | "post-collision";
+  opacity: number;
+  beamY: any;
+  beamOpacity: any;
+}) {
 
   // Render different beam configurations based on variant
   const renderBeam = () => {
@@ -143,7 +180,7 @@ export function LiquidBeamBackground({
   };
 
   return (
-    <div ref={containerRef} className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {renderBeam()}
 
       <style jsx>{`
