@@ -1,200 +1,254 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Zap, Users, Rocket, Shield, Layers, GitBranch } from "lucide-react";
 import { LiquidBeamBackground } from "./LiquidBeamBackground";
+import { useRef } from "react";
 
 const features = [
   {
     icon: Zap,
-    title: "Lightning-Fast Deployments",
-    description: "From Git push to production in under 60 seconds. Watch your changes go live in real-time with zero configuration.",
-    color: "from-[#FF9A5A] to-[#FF4D97]",
-    glowColor: "rgba(255, 154, 90, 0.3)",
+    title: "Lightning Fast",
+    description: "Deploy in seconds. From Git push to production faster than you can blink.",
+    position: "left", // Position relative to beam
   },
   {
     icon: Layers,
-    title: "Visual Canvas Builder",
-    description: "Design complex infrastructure with an intuitive drag-and-drop canvas. Connect services like building blocks.",
-    color: "from-[#5C5CF0] to-[#7B7BFF]",
-    glowColor: "rgba(92, 92, 240, 0.3)",
-  },
-  {
-    icon: Users,
-    title: "Team Collaboration",
-    description: "Real-time collaboration built in. Share projects, review changes, and ship together as one unified team.",
-    color: "from-[#A076FF] to-[#C8AFFF]",
-    glowColor: "rgba(160, 118, 255, 0.3)",
-  },
-  {
-    icon: Rocket,
-    title: "Auto-Scaling Magic",
-    description: "Handle 10 or 10 million users effortlessly. Our infrastructure scales automatically with zero manual intervention.",
-    color: "from-[#7B7BFF] to-[#A076FF]",
-    glowColor: "rgba(123, 123, 255, 0.3)",
+    title: "Visual Canvas",
+    description: "Build complex infrastructure with intuitive drag-and-drop simplicity.",
+    position: "left",
   },
   {
     icon: Shield,
-    title: "Enterprise-Grade Security",
-    description: "SOC 2 compliant with automatic SSL, DDoS protection, encrypted secrets, and private networking out of the box.",
-    color: "from-[#5C5CF0] to-[#A076FF]",
-    glowColor: "rgba(92, 92, 240, 0.3)",
+    title: "Ultra Secure",
+    description: "Enterprise-grade security with automatic SSL and DDoS protection built-in.",
+    position: "left",
+  },
+  {
+    icon: Users,
+    title: "Team First",
+    description: "Real-time collaboration tools designed for modern development teams.",
+    position: "right", // Right side near beam
+  },
+  {
+    icon: Rocket,
+    title: "Auto-Scale",
+    description: "Handle any load effortlessly. From 10 to 10 million users automatically.",
+    position: "right",
   },
   {
     icon: GitBranch,
-    title: "Preview Environments",
-    description: "Every branch gets its own live environment. Test, review, and iterate with confidence before merging.",
-    color: "from-[#A076FF] to-[#FF9A5A]",
-    glowColor: "rgba(160, 118, 255, 0.3)",
+    title: "Preview Branches",
+    description: "Every branch gets a live environment. Test before you merge with confidence.",
+    position: "right",
   },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: "easeOut" as const,
-    },
-  },
-};
-
 export function FeatureGrid() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const beamGlow = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.3, 0.6, 0.6, 0.3]);
+
+  const leftFeatures = features.filter(f => f.position === "left");
+  const rightFeatures = features.filter(f => f.position === "right");
+
   return (
-    <section className="py-24 md:py-32 px-4 relative overflow-hidden bg-[#0A0A0C]">
-      {/* Liquid beam flows subtly behind features */}
-      <LiquidBeamBackground variant="features" opacity={0.3} />
+    <section
+      ref={containerRef}
+      className="relative min-h-screen py-32 px-6 overflow-hidden bg-gradient-to-b from-[#0B0B0F] via-[#0A0A0E] to-[#0B0B0F]"
+    >
+      {/* Beam flows through center-right */}
+      <LiquidBeamBackground variant="features" opacity={0.5} />
 
-      {/* Background decoration */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-1/2 left-0 w-96 h-96 bg-gradient-to-br from-[#5C5CF0]/20 to-transparent rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-br from-[#FF9A5A]/20 to-transparent rounded-full blur-3xl" />
-        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-to-br from-[#A076FF]/15 to-transparent rounded-full blur-3xl" />
-      </div>
+      {/* Radial glow from beam */}
+      <motion.div
+        className="absolute top-1/2 left-[60%] -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-gradient-radial from-[#5141FF]/20 via-[#5141FF]/5 to-transparent blur-3xl pointer-events-none"
+        style={{ opacity: beamGlow }}
+      />
 
-      <div className="max-w-7xl mx-auto">
+      <div className="relative z-10 max-w-7xl mx-auto">
         {/* Section header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          className="text-center mb-24"
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 1, ease: "easeOut" }}
         >
           <motion.div
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] mb-6"
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 mb-6"
+            transition={{ delay: 0.2, duration: 0.8 }}
           >
-            <div className="w-2 h-2 rounded-full bg-[#5C5CF0] animate-pulse" />
-            <span className="text-sm font-medium text-[#B0B0C0] tracking-wide">
-              POWERFUL FEATURES
+            <div className="w-1.5 h-1.5 rounded-full bg-[#5141FF] animate-pulse" />
+            <span className="text-xs text-white/60 uppercase tracking-wider font-medium">
+              Powerful Features
             </span>
           </motion.div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            Everything you need to{" "}
-            <span className="bg-gradient-to-r from-[#5C5CF0] via-[#A076FF] to-[#FF9A5A] bg-clip-text text-transparent">
-              build faster
+
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-white mb-6 tracking-tight">
+            Built for
+            <br />
+            <span className="bg-gradient-to-r from-[#FFFFFF] via-[#C0A8FF] to-[#5141FF] bg-clip-text text-transparent">
+              modern teams
             </span>
           </h2>
-          <p className="text-lg md:text-xl text-[#B0B0C0] max-w-2xl mx-auto">
-            A complete platform for modern development teams. From idea to production in minutes, not days.
+
+          <p className="text-lg md:text-xl text-white/50 max-w-2xl mx-auto font-light leading-relaxed">
+            Everything you need to ship faster, delivered through an interface that feels alive.
           </p>
         </motion.div>
 
-        {/* Feature grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <motion.div
-                key={index}
-                variants={itemVariants}
-                whileHover={{ scale: 1.03, y: -8 }}
-                className="group relative p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all duration-500 cursor-pointer"
-                style={{
-                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
-                }}
-              >
-                {/* Gradient glow on hover */}
+        {/* Feature cards arranged around the beam */}
+        <div className="relative">
+          {/* Left column - further from beam */}
+          <div className="absolute left-0 top-0 w-[40%] space-y-8">
+            {leftFeatures.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
                 <motion.div
-                  className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"
-                  style={{
-                    background: `radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), ${feature.glowColor}, transparent 40%)`,
-                    filter: "blur(40px)",
-                  }}
-                />
-
-                {/* Animated beam on hover */}
-                <motion.div
-                  className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  animate={{
-                    background: [
-                      `linear-gradient(135deg, transparent 0%, ${feature.glowColor} 50%, transparent 100%)`,
-                      `linear-gradient(135deg, transparent 30%, ${feature.glowColor} 80%, transparent 100%)`,
-                      `linear-gradient(135deg, transparent 0%, ${feature.glowColor} 50%, transparent 100%)`,
-                    ],
-                  }}
+                  key={index}
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
                   transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
+                    delay: index * 0.15,
+                    duration: 0.8,
+                    ease: [0.19, 1, 0.22, 1]
                   }}
-                />
-
-                {/* Icon */}
-                <div className="relative mb-6">
+                >
                   <motion.div
-                    className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${feature.color} shadow-lg`}
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    className="group relative p-8 rounded-2xl bg-gradient-to-br from-white/[0.05] to-white/[0.02] backdrop-blur-xl border border-white/[0.08] hover:border-white/20 transition-all duration-500 cursor-default"
+                    whileHover={{
+                      scale: 1.02,
+                      x: 10,
+                      borderColor: "rgba(81, 65, 255, 0.2)"
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   >
-                    <Icon className="w-6 h-6 text-white" />
+                    {/* Beam-side glow (right side) */}
+                    <div className="absolute -right-4 top-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-l from-[#5141FF]/0 via-[#5141FF]/5 to-transparent blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                    {/* Icon */}
+                    <div className="relative mb-5">
+                      <motion.div
+                        className="inline-flex p-3.5 rounded-xl bg-gradient-to-br from-[#5141FF]/10 to-[#7B6BFF]/5 border border-[#5141FF]/20"
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                      >
+                        <Icon className="w-5 h-5 text-[#5141FF]" />
+                      </motion.div>
+                    </div>
+
+                    {/* Content */}
+                    <h3 className="text-xl font-bold mb-2 text-white group-hover:text-[#C0A8FF] transition-colors duration-300">
+                      {feature.title}
+                    </h3>
+                    <p className="text-sm text-white/50 leading-relaxed group-hover:text-white/70 transition-colors duration-300">
+                      {feature.description}
+                    </p>
+
+                    {/* Light ray towards beam */}
+                    <div className="absolute top-1/2 -right-8 w-8 h-px bg-gradient-to-r from-[#5141FF]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </motion.div>
-                  {/* Icon glow */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-50 blur-xl transition-opacity duration-500 rounded-xl`} />
-                </div>
+                </motion.div>
+              );
+            })}
+          </div>
 
-                {/* Content */}
-                <h3 className="text-xl font-semibold mb-3 text-white group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/80 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300">
-                  {feature.title}
-                </h3>
-                <p className="text-[#B0B0C0] leading-relaxed group-hover:text-[#D0D0D0] transition-colors duration-300">
-                  {feature.description}
-                </p>
+          {/* Right column - closer to beam, more illuminated */}
+          <div className="absolute right-0 top-0 w-[40%] space-y-8">
+            {rightFeatures.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{
+                    delay: index * 0.15 + 0.1,
+                    duration: 0.8,
+                    ease: [0.19, 1, 0.22, 1]
+                  }}
+                >
+                  <motion.div
+                    className="group relative p-8 rounded-2xl bg-gradient-to-br from-white/[0.08] to-white/[0.03] backdrop-blur-xl border border-white/[0.12] hover:border-[#5141FF]/40 transition-all duration-500 cursor-default shadow-[0_0_40px_rgba(81,65,255,0.1)]"
+                    whileHover={{
+                      scale: 1.03,
+                      x: -10,
+                      boxShadow: "0 0 60px rgba(81, 65, 255, 0.3)"
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  >
+                    {/* Stronger beam illumination from left */}
+                    <div className="absolute -left-8 top-1/2 -translate-y-1/2 w-40 h-40 bg-gradient-to-r from-[#5141FF]/10 via-[#5141FF]/20 to-transparent blur-3xl opacity-60 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-                {/* Corner accent */}
-                <div className="absolute top-0 right-0 w-24 h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-20 blur-2xl rounded-full`} />
-                </div>
+                    {/* Icon with glow */}
+                    <div className="relative mb-5">
+                      <motion.div
+                        className="inline-flex p-3.5 rounded-xl bg-gradient-to-br from-[#5141FF]/20 to-[#7B6BFF]/10 border border-[#5141FF]/30 shadow-lg shadow-[#5141FF]/20"
+                        whileHover={{ scale: 1.15, rotate: -5 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                      >
+                        <Icon className="w-5 h-5 text-[#7B6BFF]" />
+                      </motion.div>
+                      {/* Icon glow */}
+                      <div className="absolute inset-0 bg-[#5141FF]/30 blur-xl rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    </div>
 
-                {/* Border gradient on hover */}
-                <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br ${feature.color} -z-20`} style={{ padding: "1px" }}>
-                  <div className="absolute inset-[1px] rounded-2xl bg-[#0A0A0C]" />
-                </div>
-              </motion.div>
-            );
-          })}
+                    {/* Content */}
+                    <h3 className="text-xl font-bold mb-2 text-white group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-[#C0A8FF] group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300">
+                      {feature.title}
+                    </h3>
+                    <p className="text-sm text-white/60 leading-relaxed group-hover:text-white/80 transition-colors duration-300">
+                      {feature.description}
+                    </p>
+
+                    {/* Light ray from beam */}
+                    <div className="absolute top-1/2 -left-8 w-8 h-px bg-gradient-to-l from-[#5141FF]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                    {/* Shimmer effect */}
+                    <motion.div
+                      className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-[#5141FF]/5 to-transparent opacity-0 group-hover:opacity-100"
+                      animate={{
+                        x: ["-100%", "200%"]
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        repeatDelay: 3,
+                        ease: "easeInOut"
+                      }}
+                    />
+                  </motion.div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Spacer for proper height */}
+          <div className="h-[1400px]" />
+        </div>
+
+        {/* Bottom decorative text */}
+        <motion.div
+          className="mt-24 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.8, duration: 1 }}
+        >
+          <p className="text-white/30 text-sm font-light">
+            And that's just the beginning — explore{" "}
+            <span className="text-[#5141FF] font-medium">40+ features</span> designed for speed
+          </p>
         </motion.div>
       </div>
     </section>

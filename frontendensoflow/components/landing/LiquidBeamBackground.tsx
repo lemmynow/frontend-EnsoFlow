@@ -69,9 +69,9 @@ function CSSFallback({
       case "hero":
         return (
           <>
-            {/* Primary liquid beam - narrow vertical flow */}
+            {/* Primary liquid beam - narrow vertical flow, offset to right */}
             <motion.div
-              className="absolute left-1/2 -translate-x-1/2 w-[120px] h-[150vh] top-[-20vh]"
+              className="absolute left-[60%] -translate-x-1/2 w-[120px] h-[150vh] top-[-20vh]"
               style={{ y: beamY, opacity: beamOpacity }}
               initial={{ opacity: 0, scaleY: 0.8 }}
               animate={{ opacity: 1, scaleY: 1 }}
@@ -91,10 +91,10 @@ function CSSFallback({
             {[...Array(5)].map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute left-1/2 -translate-x-1/2 w-[8px] h-[8px] rounded-full bg-gradient-to-b from-[#FFFFFF]/60 to-[#5141FF]/80 blur-[2px]"
+                className="absolute left-[60%] -translate-x-1/2 w-[8px] h-[8px] rounded-full bg-gradient-to-b from-[#FFFFFF]/60 to-[#5141FF]/80 blur-[2px]"
                 style={{
                   top: `${i * 20}%`,
-                  left: `calc(50% + ${(i % 2 === 0 ? 1 : -1) * (i * 8)}px)`,
+                  left: `calc(60% + ${(i % 2 === 0 ? 1 : -1) * (i * 8)}px)`,
                 }}
                 animate={{
                   y: ["0vh", "150vh"],
@@ -115,7 +115,7 @@ function CSSFallback({
       case "features":
         return (
           <motion.div
-            className="absolute left-1/2 -translate-x-1/2 w-[100px] h-full top-0"
+            className="absolute left-[60%] -translate-x-1/2 w-[100px] h-full top-0"
             style={{ opacity: beamOpacity }}
           >
             {/* Subtle background beam - reduced opacity */}
