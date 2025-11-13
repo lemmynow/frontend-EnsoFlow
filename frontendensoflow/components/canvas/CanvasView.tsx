@@ -55,8 +55,6 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstanceWithProject | null>(null);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [configModalOpen, setConfigModalOpen] = useState(false);
-
-  // Define handleConfigureNode first before using it
   const handleConfigureNode = useCallback((nodeId: string) => {
     setSelectedNode(nodeId);
     setConfigModalOpen(true);
@@ -65,7 +63,7 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
   // Load initial canvas
   useEffect(() => {
     if (initialCanvas) {
-      const loadedNodes = initialCanvas.nodes.map((node) => ({
+      const loadedNodes: Node[] = initialCanvas.nodes.map((node) => ({
         id: node.id,
         type: node.type,
         position: node.position,
@@ -75,7 +73,7 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
         },
       }));
 
-      const loadedEdges = initialCanvas.edges.map((edge) => ({
+      const loadedEdges: Edge[] = initialCanvas.edges.map((edge) => ({
         id: edge.id,
         source: edge.source,
         target: edge.target,
@@ -176,9 +174,9 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
           : node
       )
     );
-  };
+  }, [selectedNode, setNodes]);
 
-  const handleSaveCanvas = () => {
+  const handleSaveCanvas = useCallback(() => {
     const canvas: Canvas = {
       nodes: nodes.map((node) => ({
         id: node.id,
@@ -199,12 +197,12 @@ export function CanvasView({ initialCanvas, onSave, onDeploy, readOnly = false }
     localStorage.setItem("canvas-autosave", JSON.stringify(canvas));
 
     onSave?.(canvas);
-  };
+  }, [nodes, edges, onSave]);
 
-  const handleDragStart = (event: React.DragEvent, nodeType: string) => {
+  const handleDragStart = useCallback((event: React.DragEvent, nodeType: string) => {
     event.dataTransfer.setData("application/reactflow", nodeType);
     event.dataTransfer.effectAllowed = "move";
-  };
+  }, []);
 
   const selectedNodeData = nodes.find((n) => n.id === selectedNode);
 
