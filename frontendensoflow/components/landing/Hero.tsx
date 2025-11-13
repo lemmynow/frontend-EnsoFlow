@@ -148,9 +148,11 @@ export function Hero() {
           className="font-black text-[clamp(2.5rem,6vw,6rem)] leading-[0.95] tracking-tight mb-6 text-white"
           variants={itemVariants}
         >
-          Everything App
+          Deploy in Seconds
           <br />
-          <span className="text-white/90">for your teams</span>
+          <span className="bg-gradient-to-r from-[#5C5CF0] via-[#A076FF] to-[#FF9A5A] bg-clip-text text-transparent">
+            Scale to Millions
+          </span>
         </motion.h1>
 
         {/* Subheadline */}
@@ -158,8 +160,8 @@ export function Hero() {
           className="text-[1.125rem] leading-relaxed text-[#B0B0C0] mb-10 max-w-xl"
           variants={itemVariants}
         >
-          An open-source platform replacing Linear, Jira, Slack, and Notion in one unified space.
-          Ship faster, collaborate better.
+          The visual deployment platform that makes infrastructure feel like magic.
+          From localhost to production in 60 seconds—no DevOps degree required.
         </motion.p>
 
         {/* CTA Button */}
