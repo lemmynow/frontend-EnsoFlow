@@ -11,7 +11,7 @@ const LiquidLightCanvas = dynamic(
 );
 
 interface LiquidBeamBackgroundProps {
-  variant?: "hero" | "features" | "pre-collision" | "post-collision";
+  variant?: "hero" | "features" | "pre-collision" | "post-collision" | "liquid-fill";
   opacity?: number;
   useShader?: boolean; // Toggle between WebGL shader and CSS fallback
 }
@@ -38,7 +38,7 @@ export function LiquidBeamBackground({
   // If WebGL shader is enabled, use it
   if (useShader) {
     return (
-      <div ref={containerRef} className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div ref={containerRef} className="absolute inset-0 overflow-hidden pointer-events-none z-50">
         <Suspense fallback={<CSSFallback variant={variant} opacity={opacity} beamY={beamY} beamOpacity={beamOpacity} />}>
           <LiquidLightCanvas variant={variant} opacity={opacity} />
         </Suspense>
@@ -57,7 +57,7 @@ function CSSFallback({
   beamY,
   beamOpacity
 }: {
-  variant: "hero" | "features" | "pre-collision" | "post-collision";
+  variant: "hero" | "features" | "pre-collision" | "post-collision" | "liquid-fill";
   opacity: number;
   beamY: any;
   beamOpacity: any;
@@ -71,7 +71,7 @@ function CSSFallback({
           <>
             {/* Primary liquid beam - narrow vertical flow, offset to right */}
             <motion.div
-              className="absolute left-[60%] -translate-x-1/2 w-[120px] h-[150vh] top-[-20vh]"
+              className="absolute left-[63%] -translate-x-1/2 w-[120px] h-[150vh] top-[-20vh]"
               style={{ y: beamY, opacity: beamOpacity }}
               initial={{ opacity: 0, scaleY: 0.8 }}
               animate={{ opacity: 1, scaleY: 1 }}
@@ -91,10 +91,10 @@ function CSSFallback({
             {[...Array(5)].map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute left-[60%] -translate-x-1/2 w-[8px] h-[8px] rounded-full bg-gradient-to-b from-[#FFFFFF]/60 to-[#5141FF]/80 blur-[2px]"
+                className="absolute left-[63%] -translate-x-1/2 w-[8px] h-[8px] rounded-full bg-gradient-to-b from-[#FFFFFF]/60 to-[#5141FF]/80 blur-[2px]"
                 style={{
                   top: `${i * 20}%`,
-                  left: `calc(60% + ${(i % 2 === 0 ? 1 : -1) * (i * 8)}px)`,
+                  left: `calc(63% + ${(i % 2 === 0 ? 1 : -1) * (i * 8)}px)`,
                 }}
                 animate={{
                   y: ["0vh", "150vh"],
@@ -115,7 +115,7 @@ function CSSFallback({
       case "features":
         return (
           <motion.div
-            className="absolute left-[60%] -translate-x-1/2 w-[100px] h-full top-0"
+            className="absolute left-[63%] -translate-x-1/2 w-[100px] h-full top-0"
             style={{ opacity: beamOpacity }}
           >
             {/* Subtle background beam - reduced opacity */}
@@ -174,13 +174,96 @@ function CSSFallback({
           </>
         );
 
+      case "liquid-fill":
+        return (
+          <>
+            {/* Beam transitioning to liquid fill at bottom */}
+            <motion.div
+              className="absolute left-[63%] -translate-x-1/2 w-[120px] h-full top-0"
+              style={{ opacity: beamOpacity }}
+            >
+              {/* Beam gradually widening as it approaches bottom */}
+              <div className="absolute inset-0 bg-gradient-to-b from-[#5141FF]/20 via-[#7B7BFF]/30 to-[#C0A8FF]/40 opacity-50 blur-[60px] animate-liquidFlowSlow" />
+            </motion.div>
+
+            {/* Liquid pooling at bottom - fills like water */}
+            <motion.div
+              className="absolute bottom-0 left-0 right-0 h-[30vh]"
+              initial={{ height: "0vh", opacity: 0 }}
+              whileInView={{ height: "30vh", opacity: 1 }}
+              viewport={{ once: true, margin: "-200px" }}
+              transition={{ duration: 2, ease: [0.19, 1, 0.22, 1] as const }}
+            >
+              {/* Liquid surface with ripples */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#5141FF]/20 via-[#7B7BFF]/15 to-transparent blur-3xl" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#C0A8FF]/15 via-[#8B7BFF]/10 to-transparent blur-2xl" />
+
+              {/* Bright core where beam meets liquid */}
+              <motion.div
+                className="absolute top-0 left-[63%] -translate-x-1/2 w-[200px] h-[200px] bg-gradient-radial from-[#FFFFFF]/20 via-[#5141FF]/30 to-transparent blur-3xl"
+                animate={{
+                  opacity: [0.6, 1, 0.6],
+                  scale: [1, 1.1, 1],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+
+              {/* Ripple waves spreading outward */}
+              {[...Array(3)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#5141FF]/30 to-transparent"
+                  style={{ top: `${20 + i * 15}%` }}
+                  animate={{
+                    opacity: [0.3, 0.6, 0.3],
+                    scaleX: [0.95, 1, 0.95],
+                  }}
+                  transition={{
+                    duration: 3 + i * 0.5,
+                    repeat: Infinity,
+                    delay: i * 0.5,
+                    ease: "easeInOut"
+                  }}
+                />
+              ))}
+
+              {/* Liquid particles floating */}
+              {[...Array(8)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-2 h-2 rounded-full bg-gradient-to-br from-[#FFFFFF]/40 to-[#5141FF]/60 blur-[1px]"
+                  style={{
+                    bottom: `${10 + (i % 4) * 5}%`,
+                    left: `${30 + i * 5}%`,
+                  }}
+                  animate={{
+                    y: [-10, -20, -10],
+                    opacity: [0.4, 0.8, 0.4],
+                    scale: [0.8, 1.2, 0.8],
+                  }}
+                  transition={{
+                    duration: 3 + i * 0.3,
+                    repeat: Infinity,
+                    delay: i * 0.2,
+                    ease: "easeInOut"
+                  }}
+                />
+              ))}
+            </motion.div>
+          </>
+        );
+
       default:
         return null;
     }
   };
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-50">
       {renderBeam()}
 
       <style jsx>{`

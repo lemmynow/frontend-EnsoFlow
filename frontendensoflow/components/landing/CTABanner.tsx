@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRef } from "react";
+import { LiquidBeamBackground } from "./LiquidBeamBackground";
 
 export function CTABanner() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -21,25 +22,12 @@ export function CTABanner() {
       ref={containerRef}
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#0A0A0E] via-[#0B0B0F] to-[#0E0E14] py-32 px-6"
     >
-      {/* Beam fading out - positioned offset to right */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <motion.div
-          className="absolute left-[60%] -translate-x-1/2 top-0 w-[120px] h-full"
-          style={{ opacity: beamOpacity }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-[#5141FF]/40 via-[#7B6BFF]/20 to-transparent blur-[60px] animate-liquidFlowSlow" />
-        </motion.div>
-      </div>
+      {/* Beam fading out and filling bottom like liquid */}
+      <LiquidBeamBackground variant="liquid-fill" opacity={0.8} />
 
-      {/* Light horizon at bottom */}
+      {/* Radial glow emanating from beam */}
       <motion.div
-        className="absolute bottom-0 left-0 right-0 h-[40%] bg-gradient-to-t from-[#5141FF]/10 via-[#7B6BFF]/5 to-transparent blur-3xl pointer-events-none"
-        style={{ opacity: horizonGlow }}
-      />
-
-      {/* Radial glow emanating from center */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-gradient-radial from-[#5141FF]/15 via-[#5141FF]/5 to-transparent blur-3xl pointer-events-none"
+        className="absolute top-1/2 left-[63%] -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-gradient-radial from-[#5141FF]/15 via-[#5141FF]/5 to-transparent blur-3xl pointer-events-none"
         style={{ opacity: horizonGlow }}
       />
 

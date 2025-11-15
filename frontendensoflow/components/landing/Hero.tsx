@@ -56,7 +56,7 @@ export function Hero() {
       <LiquidBeamBackground variant="hero" opacity={1} />
 
       {/* Radial gradient emanating from beam */}
-      <div className="absolute top-0 left-[60%] -translate-x-1/2 w-[800px] h-[800px] bg-gradient-radial from-[#5141FF]/20 via-[#5141FF]/5 to-transparent blur-3xl pointer-events-none z-10" />
+      <div className="absolute top-0 left-[63%] -translate-x-1/2 w-[800px] h-[800px] bg-gradient-radial from-[#5141FF]/20 via-[#5141FF]/5 to-transparent blur-3xl pointer-events-none z-10" />
 
       {/* Subtle grid overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:100px_100px] pointer-events-none z-10" />

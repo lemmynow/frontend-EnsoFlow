@@ -26,7 +26,7 @@ export function Showcase() {
       <LiquidBeamBackground variant="features" opacity={0.6} />
 
       {/* Radial glow from beam */}
-      <div className="absolute top-1/2 left-[60%] -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-gradient-radial from-[#5141FF]/15 via-[#5141FF]/5 to-transparent blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-[63%] -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-gradient-radial from-[#5141FF]/15 via-[#5141FF]/5 to-transparent blur-3xl pointer-events-none" />
 
       {/* Main content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto">
