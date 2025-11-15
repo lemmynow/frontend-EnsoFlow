@@ -66,7 +66,7 @@ export function FeatureGrid() {
 
       {/* Radial glow from beam */}
       <motion.div
-        className="absolute top-1/2 left-[60%] -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-gradient-radial from-[#5141FF]/20 via-[#5141FF]/5 to-transparent blur-3xl pointer-events-none"
+        className="absolute top-1/2 left-[63%] -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-gradient-radial from-[#5141FF]/20 via-[#5141FF]/5 to-transparent blur-3xl pointer-events-none"
         style={{ opacity: beamGlow }}
       />
 
